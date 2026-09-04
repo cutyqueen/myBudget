@@ -1,0 +1,207 @@
+<%@ page language="java"
+    contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+<%
+    request.setAttribute("pageTitle", "지출 등록 | myBudget");
+%>
+
+<jsp:include page="/WEB-INF/views/com/header.jsp" />
+<jsp:include page="/WEB-INF/views/com/sidebar.jsp" />
+
+<div class="page-wrapper">
+
+    <div class="page-header d-print-none">
+        <div class="container-xl">
+            <div class="row g-2 align-items-center">
+
+                <div class="col">
+                    <h2 class="page-title">지출 등록</h2>
+                    <div class="text-secondary mt-1">
+                        식비, 주거비, 교통비 등 사용한 지출을 등록합니다.
+                    </div>
+                </div>
+
+                <div class="col-auto ms-auto">
+                    <a href="<%= request.getContextPath() %>/trx/list"
+                       class="btn btn-outline-secondary">
+                        거래 내역
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="page-body">
+        <div class="container-xl">
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+
+                    <form class="card"
+                          action="<%= request.getContextPath() %>/trx/expense"
+                          method="post">
+
+                        <div class="card-body">
+
+                            <h3 class="card-title text-danger">
+                                지출 정보
+                            </h3>
+
+                            <input type="hidden"
+                                   name="transactionType"
+                                   value="EXPENSE">
+
+                            <div class="row">
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="transactionDate">
+                                        지출일
+                                    </label>
+
+                                    <input type="date"
+                                           class="form-control"
+                                           id="transactionDate"
+                                           name="transactionDate"
+                                           required>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="outAccount">
+                                        출금 계좌
+                                    </label>
+
+                                    <select class="form-select"
+                                            id="outAccount"
+                                            name="outAccount"
+                                            required>
+                                        <option value="">선택하세요</option>
+                                        <option value="카카오뱅크 입출금">
+                                            카카오뱅크 입출금
+                                        </option>
+                                        <option value="현대카드">
+                                            현대카드
+                                        </option>
+                                        <option value="현금">
+                                            현금
+                                        </option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="majorCategory">
+                                        지출 대분류
+                                    </label>
+
+                                    <select class="form-select"
+                                            id="majorCategory"
+                                            name="majorCategory"
+                                            required>
+                                        <option value="">선택하세요</option>
+                                        <option value="주거비">주거비</option>
+                                        <option value="식비">식비</option>
+                                        <option value="교통비">교통비</option>
+                                        <option value="생활비">생활비</option>
+                                        <option value="의료·건강">의료·건강</option>
+                                        <option value="문화·여가">문화·여가</option>
+                                        <option value="기타지출">기타지출</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label" for="minorCategory">
+                                        지출 소분류
+                                    </label>
+
+                                    <select class="form-select"
+                                            id="minorCategory"
+                                            name="minorCategory"
+                                            required>
+                                        <option value="">선택하세요</option>
+                                        <option value="식자재">식자재</option>
+                                        <option value="외식">외식</option>
+                                        <option value="배달">배달</option>
+                                        <option value="관리비">관리비</option>
+                                        <option value="대중교통">대중교통</option>
+                                        <option value="보험료">보험료</option>
+                                        <option value="쇼핑">쇼핑</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="amount">
+                                    지출 금액
+                                </label>
+
+                                <div class="input-group">
+                                    <input type="number"
+                                           class="form-control"
+                                           id="amount"
+                                           name="amount"
+                                           min="1"
+                                           step="1"
+                                           placeholder="0"
+                                           required>
+
+                                    <span class="input-group-text">원</span>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="content">
+                                    내용
+                                </label>
+
+                                <input type="text"
+                                       class="form-control"
+                                       id="content"
+                                       name="content"
+                                       maxlength="200"
+                                       placeholder="예: 점심 식사, 아파트 관리비">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="memo">
+                                    메모
+                                </label>
+
+                                <textarea class="form-control"
+                                          id="memo"
+                                          name="memo"
+                                          rows="3"
+                                          maxlength="500"
+                                          placeholder="추가 메모를 입력하세요."></textarea>
+                            </div>
+
+                        </div>
+
+                        <div class="card-footer text-end">
+
+                            <a href="<%= request.getContextPath() %>/trx/list"
+                               class="btn btn-outline-secondary">
+                                취소
+                            </a>
+
+                            <button type="submit" class="btn btn-danger">
+                                지출 등록
+                            </button>
+
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<jsp:include page="/WEB-INF/views/com/footer.jsp" />

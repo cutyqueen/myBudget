@@ -24,19 +24,19 @@
 
                 <div class="col-auto ms-auto">
                     <a href="<%= request.getContextPath() %>/trx/income"
-                       class="btn btn-success">
-                        + 수입 등록
-                    </a>
-
-                    <a href="<%= request.getContextPath() %>/trx/expense"
-                       class="btn btn-danger">
-                        + 지출 등록
-                    </a>
-
-                    <a href="<%= request.getContextPath() %>/trx/transfer"
-                       class="btn btn-primary">
-                        + 이체 등록
-                    </a>
+					   class="btn btn-success">
+					    + 수입 등록
+					</a>
+					
+					<a href="<%= request.getContextPath() %>/trx/expense"
+					   class="btn btn-danger">
+					    + 지출 등록
+					</a>
+					
+					<a href="<%= request.getContextPath() %>/trx/transfer"
+					   class="btn btn-primary">
+					    + 이체 등록
+					</a>
                 </div>
 
             </div>

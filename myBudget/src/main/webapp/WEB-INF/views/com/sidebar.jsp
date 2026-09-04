@@ -30,24 +30,24 @@
 
                     <div class="dropdown-menu">
                         <a class="dropdown-item"
-                           href="<%= request.getContextPath() %>/trx/list">
-                            거래 내역
-                        </a>
-
-                        <a class="dropdown-item"
-                           href="<%= request.getContextPath() %>/trx/income">
-                            수입 등록
-                        </a>
-
-                        <a class="dropdown-item"
-                           href="<%= request.getContextPath() %>/trx/expense">
-                            지출 등록
-                        </a>
-
-                        <a class="dropdown-item"
-                           href="<%= request.getContextPath() %>/trx/transfer">
-                            이체 등록
-                        </a>
+						   href="<%= request.getContextPath() %>/trx/list">
+						    거래 내역
+						</a>
+						
+						<a class="dropdown-item"
+						   href="<%= request.getContextPath() %>/trx/income">
+						    수입 등록
+						</a>
+						
+						<a class="dropdown-item"
+						   href="<%= request.getContextPath() %>/trx/expense">
+						    지출 등록
+						</a>
+						
+						<a class="dropdown-item"
+						   href="<%= request.getContextPath() %>/trx/transfer">
+						    이체 등록
+						</a>
                     </div>
                 </div>
 
