@@ -65,10 +65,10 @@
                     </a>
 
                     <div class="dropdown-menu">
-                        <a class="dropdown-item"
-                           href="<%= request.getContextPath() %>/acc/list">
-                            계좌 관리
-                        </a>
+                        <a class="nav-link"
+						   href="<%= request.getContextPath() %>/acc/list">
+						    계좌 관리
+						</a>
 
                         <a class="dropdown-item"
                            href="<%= request.getContextPath() %>/report/balance">
