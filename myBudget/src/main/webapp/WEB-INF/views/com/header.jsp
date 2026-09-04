@@ -36,18 +36,18 @@
 
                 <div class="nav-item">
                     <span class="nav-link">
-                        <span class="avatar avatar-sm me-2 bg-primary-lt">
-                            MB
-                        </span>
-                        홍길동님
-                    </span>
+					    <span class="avatar avatar-sm me-2 bg-primary-lt">
+					        MB
+					    </span>
+					    ${sessionScope.loginUser}님
+					</span>
                 </div>
 
                 <div class="nav-item">
                     <a class="nav-link"
-                       href="<%= request.getContextPath() %>/user/logout">
-                        로그아웃
-                    </a>
+					   href="<%= request.getContextPath() %>/user/logout">
+					    로그아웃
+					</a>
                 </div>
 
             </div>

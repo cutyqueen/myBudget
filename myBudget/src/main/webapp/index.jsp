@@ -3,5 +3,9 @@
     pageEncoding="UTF-8"%>
 
 <%
-    response.sendRedirect(request.getContextPath() + "/board/main");
+    if (session.getAttribute("loginUser") != null) {
+        response.sendRedirect(request.getContextPath() + "/board/main");
+    } else {
+        response.sendRedirect(request.getContextPath() + "/user/login");
+    }
 %>
