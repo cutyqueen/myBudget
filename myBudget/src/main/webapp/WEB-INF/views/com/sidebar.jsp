@@ -120,13 +120,11 @@
                             설정
                         </span>
                     </a>
-
                     <div class="dropdown-menu">
-                        <a class="dropdown-item"
-                           href="<%= request.getContextPath() %>/user/category">
-                            카테고리 관리
-                        </a>
-
+                     <a class="dropdown-item"
+						   href="<%= request.getContextPath() %>/user/cate">
+						    카테고리 관리
+						</a>
                         <a class="dropdown-item"
                            href="<%= request.getContextPath() %>/user/profile">
                             내 정보
