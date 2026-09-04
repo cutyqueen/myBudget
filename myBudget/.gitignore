@@ -1,0 +1,28 @@
+# Eclipse 관련 설정
+.metadata/
+.settings/
+.project
+.classpath
+
+# Eclipse 빌드 결과물
+bin/
+build/
+target/
+
+# Tomcat 배포 및 서버 관련 파일
+Servers/
+tmp/
+
+# Java 컴파일 파일
+*.class
+
+# 로그 파일
+*.log
+
+# 운영 환경 DB 설정 파일
+db.properties
+database.properties
+
+# OS 파일
+.DS_Store
+Thumbs.db
