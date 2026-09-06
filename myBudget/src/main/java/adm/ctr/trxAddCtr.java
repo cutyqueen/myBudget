@@ -46,16 +46,19 @@ public class trxAddCtr extends HttpServlet {
         cocdSvc cocdSvc = new cocdSvc();
         accSvc accSvc = new accSvc();
 
+        // 수입 카테고리
         List<cocdDto> incomeCatList =
                 cocdSvc.selectCodeListByUpCd(
                         "INCOME_CAT"
                 );
 
-        request.setAttribute(
-                "incomeCatList",
-                incomeCatList
-        );
+        // 지출 카테고리
+        List<cocdDto> expenseCatList =
+                cocdSvc.selectCodeListByUpCd(
+                        "EXPENSE_CAT"
+                );
 
+        // 계좌 목록
         List<accDto> accountList =
                 accSvc.selectAccountList();
 
@@ -63,7 +66,12 @@ public class trxAddCtr extends HttpServlet {
                 "incomeCatList",
                 incomeCatList
         );
-        
+
+        request.setAttribute(
+                "expenseCatList",
+                expenseCatList
+        );
+
         request.setAttribute(
                 "accountList",
                 accountList
@@ -112,13 +120,9 @@ public class trxAddCtr extends HttpServlet {
 
         trxDto transaction = new trxDto();
 
-        // 테스트용 사용자 ID
         transaction.setUserId("testuser");
-
-        // 수입일 (YYYY-MM-DD → YYYYMMDD)
         transaction.setTranDt(transactionDate.replace("-", ""));
 
-        // 거래유형: 01=수입, 02=지출, 03=이체
         if ("INCOME".equals(transactionType)) {
             transaction.setTypeCd("01");
             transaction.setInAcctId(inAccount);
@@ -133,22 +137,11 @@ public class trxAddCtr extends HttpServlet {
             transaction.setOutAcctId(outAccount);
         }
 
-        // 카테고리 (소분류 코드)
         transaction.setCatCd(minorCategory);
-
-        // 내용
         transaction.setContent(content);
-
-        // 금액
         transaction.setAmount(Integer.parseInt(amountStr));
-
-        // 메모 → REMRK
         transaction.setRemrk(memo);
-
-        // 고정여부: 1=고정, 2=일반
         transaction.setFixedYn("2");
-
-        // 결제수단: 기본값 01 (현금)
         transaction.setPaymentCd("01");
 
         trxSvc trxSvc = new trxSvc();

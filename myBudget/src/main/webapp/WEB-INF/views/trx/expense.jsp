@@ -1,9 +1,35 @@
 <%@ page language="java"
     contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="adm.dto.cocdDto" %>
+<%@ page import="adm.dto.accDto" %>
 
 <%
     request.setAttribute("pageTitle", "지출 등록 | myBudget");
+
+    List<cocdDto> expenseCatList =
+        (List<cocdDto>) request.getAttribute("expenseCatList");
+
+    List<accDto> accountList =
+        (List<accDto>) request.getAttribute("accountList");
+
+    // 대분류 중복 제거
+    List<cocdDto> expenseMajorList = new ArrayList<cocdDto>();
+    String prevLowCd = "";
+
+    if (expenseCatList != null) {
+        for (cocdDto code : expenseCatList) {
+            if (!prevLowCd.equals(code.getLowCd())) {
+                cocdDto major = new cocdDto();
+                major.setLowCd(code.getLowCd());
+                major.setLowNm(code.getLowNm());
+                expenseMajorList.add(major);
+                prevLowCd = code.getLowCd();
+            }
+        }
+    }
 %>
 
 <jsp:include page="/WEB-INF/views/com/header.jsp" />
@@ -18,7 +44,7 @@
                 <div class="col">
                     <h2 class="page-title">지출 등록</h2>
                     <div class="text-secondary mt-1">
-                        식비, 주거비, 교통비 등 사용한 지출을 등록합니다.
+                        식비, 교통비, 주거비 등 지출을 등록합니다.
                     </div>
                 </div>
 
@@ -64,6 +90,7 @@
                                            class="form-control"
                                            id="transactionDate"
                                            name="transactionDate"
+                                           value="<%= java.time.LocalDate.now() %>"
                                            required>
                                 </div>
 
@@ -77,15 +104,17 @@
                                             name="outAccount"
                                             required>
                                         <option value="">선택하세요</option>
-                                        <option value="카카오뱅크 입출금">
-                                            카카오뱅크 입출금
+<%
+    if (accountList != null) {
+        for (accDto account : accountList) {
+%>
+                                        <option value="<%= account.getAcctId() %>">
+                                            <%= account.getAcctNm() %>
                                         </option>
-                                        <option value="현대카드">
-                                            현대카드
-                                        </option>
-                                        <option value="현금">
-                                            현금
-                                        </option>
+<%
+        }
+    }
+%>
                                     </select>
                                 </div>
 
@@ -103,13 +132,17 @@
                                             name="majorCategory"
                                             required>
                                         <option value="">선택하세요</option>
-                                        <option value="주거비">주거비</option>
-                                        <option value="식비">식비</option>
-                                        <option value="교통비">교통비</option>
-                                        <option value="생활비">생활비</option>
-                                        <option value="의료·건강">의료·건강</option>
-                                        <option value="문화·여가">문화·여가</option>
-                                        <option value="기타지출">기타지출</option>
+<%
+    if (expenseMajorList != null) {
+        for (cocdDto code : expenseMajorList) {
+%>
+                                        <option value="<%= code.getLowCd() %>">
+                                            <%= code.getLowNm() %>
+                                        </option>
+<%
+        }
+    }
+%>
                                     </select>
                                 </div>
 
@@ -123,13 +156,17 @@
                                             name="minorCategory"
                                             required>
                                         <option value="">선택하세요</option>
-                                        <option value="식자재">식자재</option>
-                                        <option value="외식">외식</option>
-                                        <option value="배달">배달</option>
-                                        <option value="관리비">관리비</option>
-                                        <option value="대중교통">대중교통</option>
-                                        <option value="보험료">보험료</option>
-                                        <option value="쇼핑">쇼핑</option>
+<%
+    if (expenseCatList != null) {
+        for (cocdDto code : expenseCatList) {
+%>
+                                        <option value="<%= code.getValCd() %>">
+                                            <%= code.getValNm() %>
+                                        </option>
+<%
+        }
+    }
+%>
                                     </select>
                                 </div>
 
@@ -164,7 +201,7 @@
                                        id="content"
                                        name="content"
                                        maxlength="200"
-                                       placeholder="예: 점심 식사, 아파트 관리비">
+                                       placeholder="예: 점심 식사">
                             </div>
 
                             <div class="mb-3">
