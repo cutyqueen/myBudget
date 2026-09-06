@@ -47,7 +47,7 @@
                                     
                                     <div class="mb-3">
                                         <label for="mbpn" class="form-label">전화번호</label>
-                                        <input type="tel" class="form-control" id="mbpn" name="mbpn" placeholder="010-1234-5678" />
+                                        <input type="tel" class="form-control" id="mbpn" name="mbpn" placeholder="전화번호를 입력하세요" maxlength="13" oninput="formatPhone(this)"/>
                                     </div>
                                     
                                     <button type="submit" class="btn btn-primary w-100">회원가입</button>
@@ -90,5 +90,20 @@
     <script src="${pageContext.request.contextPath}/assets/js/vendor.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/app.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/bootstrap.bundle.min.js"></script>
+    <script>
+	function formatPhone(input) {
+	    let value = input.value.replace(/[^0-9]/g, '');
+	    
+	    if (value.length <= 3) {
+	        input.value = value;
+	    } else if (value.length <= 7) {
+	        input.value = value.substring(0, 3) + '-' + value.substring(3);
+	    } else if (value.length <= 11) {
+	        input.value = value.substring(0, 3) + '-' + value.substring(3, 7) + '-' + value.substring(7);
+	    } else {
+	        input.value = value.substring(0, 3) + '-' + value.substring(3, 7) + '-' + value.substring(7, 11);
+	    }
+	}
+	</script>
 </body>
 </html>

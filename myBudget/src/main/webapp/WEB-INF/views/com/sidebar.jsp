@@ -7,7 +7,7 @@
 
         <div class="collapse navbar-collapse" id="navbar-menu">
             <div class="navbar-nav">
-
+				<a>sidebar.jsp</a>
                 <a class="nav-link"
                    href="<%= request.getContextPath() %>/board/main">
                     <span class="nav-link-title">

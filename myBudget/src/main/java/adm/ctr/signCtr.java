@@ -45,7 +45,7 @@ public class signCtr extends HttpServlet {
         String userNm = request.getParameter("userNm");
         String pw = request.getParameter("pw");
         String email = request.getParameter("email");
-        String mbpn = request.getParameter("mbpno");
+        String mbpno = request.getParameter("mbpno");
 
         userDto user = new userDto();
 
@@ -53,7 +53,7 @@ public class signCtr extends HttpServlet {
         user.setUserNm(userNm);
         user.setPw(pw);
         user.setEmail(email);
-        user.setMbpn(mbpn);
+        user.setMbpno(mbpno);
 
         userSvc userSvc = new userSvc();
         int result = userSvc.insertUser(user);

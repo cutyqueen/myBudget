@@ -38,8 +38,10 @@
                     </a>
                     
                     <div class="d-flex align-items-center">
+                    	<a>header.jsp          | </a>
+                    	<a><br></a>
                         <span class="me-3">
-                            ${sessionScope.loginUser}님 환영합니다
+                            ${sessionScope.loginUser}님의 가계부
                         </span>
                         <a href="${pageContext.request.contextPath}/user/logout" class="btn btn-outline-danger btn-sm">
                             로그아웃
@@ -55,6 +57,7 @@
                 <nav class="sidebar-nav">
                     <ul class="sidebar-menu">
                         <li class="sidebar-item">
+                        	<a>header.jsp</a>
                             <a href="${pageContext.request.contextPath}/trx/list" class="sidebar-link">
                                 <span>거래내역</span>
                             </a>
@@ -72,6 +75,65 @@
                         <li class="sidebar-item">
                             <a href="${pageContext.request.contextPath}/set" class="sidebar-link">
                                 <span>가계부 설정</span>
+                            </a>
+                        </li>
+                        <!-- 시트별 목록 -->
+                        <!-- 사용가이드 -->
+                        <li class="sidebar-item">
+                            <a href="${pageContext.request.contextPath}/set" class="sidebar-link">
+                                <span>사용가이드</span>
+                            </a>
+                        </li>
+                        <!-- 가계부기록 -->
+                        <li class="sidebar-item">
+                            <a href="${pageContext.request.contextPath}/set" class="sidebar-link">
+                                <span>가계부 기록</span>
+                            </a>
+                        </li>
+                        <!-- 월간보고서 -->
+                        <li class="sidebar-item">
+                            <a href="${pageContext.request.contextPath}/set" class="sidebar-link">
+                                <span>월간보고서</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="${pageContext.request.contextPath}/set" class="sidebar-link">
+                                <span>월간 상세보기</span>
+                            </a>
+                        </li>
+                         <!-- 연간보고서 -->
+                        <li class="sidebar-item">
+                            <a href="${pageContext.request.contextPath}/set" class="sidebar-link">
+                                <span>연간보고서</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="${pageContext.request.contextPath}/set" class="sidebar-link">
+                                <span>연간 상세보기</span>
+                            </a>
+                        </li>
+                        <!-- 수입지출달력 -->
+                        <li class="sidebar-item">
+                            <a href="${pageContext.request.contextPath}/set" class="sidebar-link">
+                                <span>수입ㆍ지출달력</span>
+                            </a>
+                        </li>
+                        <!-- 잔고보고서 -->
+                        <li class="sidebar-item">
+                            <a href="${pageContext.request.contextPath}/set" class="sidebar-link">
+                                <span>잔고 보고서</span>
+                            </a>
+                        </li>
+                        <!-- 가계부 설정 -->
+                        <li class="sidebar-item">
+                            <a href="${pageContext.request.contextPath}/set" class="sidebar-link">
+                                <span>가계부 설정</span>
+                            </a>
+                        </li>
+                        <!-- 관리자 시스템관리-->
+                        <li class="sidebar-item">
+                            <a href="${pageContext.request.contextPath}/user/admin" class="sidebar-link">
+                                <span>시스템관리</span>
                             </a>
                         </li>
                     </ul>
