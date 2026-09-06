@@ -14,6 +14,12 @@ public class trxDto {
     private String paymentCd;
     private String fixedYn;
     private String remrk;
+    
+ // 조회 전용 필드
+    private String catMajorNm;    // 대분류명
+    private String catMinorNm;    // 소분류명
+    private String inAcctNm;      // 입금계좌명
+    private String outAcctNm;     // 출금계좌명
 
     public String getTranId() {
         return tranId;
@@ -110,4 +116,37 @@ public class trxDto {
     public void setRemrk(String remrk) {
         this.remrk = remrk;
     }
+    
+    public String getCatMajorNm() {
+        return catMajorNm;
+    }
+
+    public void setCatMajorNm(String catMajorNm) {
+        this.catMajorNm = catMajorNm;
+    }
+    
+    public String getCatMinorNm() {
+        return catMinorNm;
+    }
+
+    public void setCatMinorNm(String catMinorNm) {
+        this.catMinorNm = catMinorNm;
+    }
+    
+    public String getInAcctNm() {
+        return inAcctNm;
+    }
+
+    public void setInAcctNm(String inAcctNm) {
+        this.inAcctNm = inAcctNm;
+    }
+    
+    public String getOutAcctNm() {
+        return outAcctNm;
+    }
+
+    public void setOutAcctNm(String outAcctNm) {
+        this.outAcctNm = outAcctNm;
+    }
+    
 }

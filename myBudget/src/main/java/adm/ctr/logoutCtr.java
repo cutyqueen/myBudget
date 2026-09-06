@@ -8,7 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/user/logout")
+@WebServlet(urlPatterns = {
+        "/user/logout"
+})
 public class logoutCtr extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -19,11 +21,8 @@ public class logoutCtr extends HttpServlet {
             HttpServletResponse response
     ) throws IOException {
 
-        HttpSession session = request.getSession(false);
-
-        if (session != null) {
-            session.invalidate();
-        }
+        HttpSession session = request.getSession();
+        session.invalidate();
 
         response.sendRedirect(
                 request.getContextPath() + "/user/login"

@@ -46,19 +46,16 @@ public class trxAddCtr extends HttpServlet {
         cocdSvc cocdSvc = new cocdSvc();
         accSvc accSvc = new accSvc();
 
-        // 수입 카테고리
         List<cocdDto> incomeCatList =
                 cocdSvc.selectCodeListByUpCd(
                         "INCOME_CAT"
                 );
 
-        // 지출 카테고리
         List<cocdDto> expenseCatList =
                 cocdSvc.selectCodeListByUpCd(
                         "EXPENSE_CAT"
                 );
 
-        // 계좌 목록
         List<accDto> accountList =
                 accSvc.selectAccountList();
 
@@ -100,9 +97,6 @@ public class trxAddCtr extends HttpServlet {
         String inAccount =
                 request.getParameter("inAccount");
 
-        String outAccount =
-                request.getParameter("outAccount");
-
         String majorCategory =
                 request.getParameter("majorCategory");
 
@@ -126,15 +120,12 @@ public class trxAddCtr extends HttpServlet {
         if ("INCOME".equals(transactionType)) {
             transaction.setTypeCd("01");
             transaction.setInAcctId(inAccount);
-            transaction.setOutAcctId(null);
         } else if ("EXPENSE".equals(transactionType)) {
             transaction.setTypeCd("02");
-            transaction.setInAcctId(null);
-            transaction.setOutAcctId(outAccount);
+            transaction.setInAcctId(inAccount);
         } else {
             transaction.setTypeCd("03");
             transaction.setInAcctId(inAccount);
-            transaction.setOutAcctId(outAccount);
         }
 
         transaction.setCatCd(minorCategory);
@@ -142,7 +133,6 @@ public class trxAddCtr extends HttpServlet {
         transaction.setAmount(Integer.parseInt(amountStr));
         transaction.setRemrk(memo);
         transaction.setFixedYn("2");
-        transaction.setPaymentCd("01");
 
         trxSvc trxSvc = new trxSvc();
         trxSvc.insertTransaction(transaction);

@@ -14,8 +14,8 @@ public class trxSvc {
         trxDao = new trxDao();
     }
 
-    public List<trxDto> selectTransactionList(String userId) {
-        return trxDao.selectTransactionList(userId);
+    public List<trxDto> selectTransactionList(trxDto searchDTO) {
+        return trxDao.selectTransactionList(searchDTO);
     }
 
     public int insertTransaction(trxDto transaction) {

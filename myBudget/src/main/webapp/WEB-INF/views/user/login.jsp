@@ -1,113 +1,85 @@
-<%@ page language="java"
-    contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-
+<%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>로그인 | myBudget</title>
-
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/@tabler/[email protected]/dist/css/tabler.min.css">
+    <title>로그인 - 가계부</title>
+    
+    <!-- MatDash CSS -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styles.min.css" />
 </head>
-
-<body class="d-flex flex-column">
-
-<div class="page page-center">
-
-    <div class="container container-tight py-4">
-
-        <div class="text-center mb-4">
-            <a href="<%= request.getContextPath() %>/board/main"
-               class="navbar-brand navbar-brand-autodark">
-
-                <span class="fs-1 fw-bold text-primary">
-                    myBudget
-                </span>
-
-            </a>
-
-            <div class="text-secondary mt-2">
-                나의 소비와 자산을 한눈에 관리하세요.
-            </div>
-        </div>
-
-        <form class="card card-md"
-              action="<%= request.getContextPath() %>/user/login"
-              method="post">
-
-            <div class="card-body">
-
-                <h2 class="card-title text-center mb-4">
-                    로그인
-                </h2>
-
-                <% if (request.getAttribute("errorMessage") != null) { %>
-                    <div class="alert alert-danger" role="alert">
-                        <%= request.getAttribute("errorMessage") %>
+<body>
+    <div class="page-wrapper" id="main-wrapper">
+        <div class="body-wrapper">
+            <div class="app-container container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="text-center mb-4">
+                                    <a href="${pageContext.request.contextPath}/">
+                                        <img src="${pageContext.request.contextPath}/assets/images/logos/dark-logo.svg" alt="가계부" />
+                                    </a>
+                                    <h4 class="card-title mt-3">로그인</h4>
+                                </div>
+                                
+                                <form action="${pageContext.request.contextPath}/user/login" method="post">
+                                    <div class="mb-3">
+                                        <label for="userId" class="form-label">아이디</label>
+                                        <input type="text" class="form-control" id="userId" name="userId" placeholder="아이디를 입력하세요" required />
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="userPassword" class="form-label">비밀번호</label>
+                                        <input type="password" class="form-control" id="userPassword" name="userPassword" placeholder="비밀번호를 입력하세요" required />
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <div class="form-check">
+                                            <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe" />
+                                            <label class="form-check-label" for="rememberMe">아이디 저장</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary w-100">로그인</button>
+                                </form>
+                                
+                                <div class="text-center mt-3">
+                                    <a href="${pageContext.request.contextPath}/user/sign" class="text-primary">회원가입</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                <% } %>
-
-                <div class="mb-3">
-                    <label class="form-label" for="loginId">
-                        아이디
-                    </label>
-
-                    <input type="text"
-                           class="form-control"
-                           id="loginId"
-                           name="loginId"
-                           placeholder="아이디를 입력하세요"
-                           autocomplete="username"
-                           required>
                 </div>
-
-                <div class="mb-2">
-                    <label class="form-label" for="password">
-                        비밀번호
-                    </label>
-
-                    <input type="password"
-                           class="form-control"
-                           id="password"
-                           name="password"
-                           placeholder="비밀번호를 입력하세요"
-                           autocomplete="current-password"
-                           required>
-                </div>
-
-                <div class="form-footer">
-                    <button type="submit"
-                            class="btn btn-primary w-100">
-                        로그인
-                    </button>
-                </div>
-
             </div>
-        </form>
-
-        <div class="text-center text-secondary mt-3">
-            아직 회원이 아니신가요?
-
-            <a href="<%= request.getContextPath() %>/user/join"
-               tabindex="-1">
-                회원가입
-            </a>
         </div>
-
-        <div class="alert alert-secondary mt-4 mb-0">
-            <strong>임시 테스트 계정</strong><br>
-            아이디: admin<br>
-            비밀번호: 1234
-        </div>
-
     </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@tabler/[email protected]/dist/js/tabler.min.js"></script>
-
+    
+    <!-- 에러 모달 -->
+    <% String error = (String) request.getAttribute("error"); %>
+    <% if (error != null) { %>
+    <div class="modal fade show" id="errorModal" tabindex="-1" style="display: block; background: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">로그인 실패</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="location.href='${pageContext.request.contextPath}/user/login'"></button>
+                </div>
+                <div class="modal-body">
+                    <%= error %>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="location.href='${pageContext.request.contextPath}/user/login'">확인</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } %>
+    
+    <!-- MatDash JS -->
+    <script src="${pageContext.request.contextPath}/assets/js/vendor.min.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/js/app.min.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
