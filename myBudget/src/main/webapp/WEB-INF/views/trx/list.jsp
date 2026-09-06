@@ -1,9 +1,14 @@
 <%@ page language="java"
     contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="adm.dto.trxDto" %>
 
 <%
     request.setAttribute("pageTitle", "거래 내역 | myBudget");
+
+    List<trxDto> transactionList =
+        (List<trxDto>) request.getAttribute("transactionList");
 %>
 
 <jsp:include page="/WEB-INF/views/com/header.jsp" />
@@ -128,7 +133,7 @@
 
                     <div class="card-actions">
                         <span class="text-secondary">
-                            총 6건
+                            총 <%= transactionList != null ? transactionList.size() : 0 %>건
                         </span>
                     </div>
                 </div>
@@ -151,19 +156,45 @@
                         </thead>
 
                         <tbody>
+<%
+                            if (transactionList != null && transactionList.size() > 0) {
+                                for (trxDto trx : transactionList) {
+                                    String typeNm = "";
+                                    String badgeClass = "";
+                                    String amountSign = "";
+                                    String amountClass = "";
 
+                                    if ("01".equals(trx.getTypeCd())) {
+                                        typeNm = "수입";
+                                        badgeClass = "bg-green-lt";
+                                        amountSign = "+";
+                                        amountClass = "text-success fw-bold";
+                                    } else if ("02".equals(trx.getTypeCd())) {
+                                        typeNm = "지출";
+                                        badgeClass = "bg-red-lt";
+                                        amountSign = "-";
+                                        amountClass = "text-danger fw-bold";
+                                    } else {
+                                        typeNm = "이체";
+                                        badgeClass = "bg-blue-lt";
+                                        amountSign = "";
+                                        amountClass = "text-primary fw-bold";
+                                    }
+%>
                             <tr>
-                                <td>2026.09.01</td>
+                                <td><%= trx.getTranDt() %></td>
                                 <td>
-                                    <span class="badge bg-green-lt">수입</span>
+                                    <span class="badge <%= badgeClass %>">
+                                        <%= typeNm %>
+                                    </span>
                                 </td>
-                                <td>근로소득</td>
-                                <td>월급</td>
-                                <td>9월 급여</td>
-                                <td>카카오뱅크 입출금</td>
-                                <td>-</td>
-                                <td class="text-end text-success fw-bold">
-                                    +2,800,000원
+                                <td><%= trx.getCatCd() %></td>
+                                <td><%= trx.getCatCd() %></td>
+                                <td><%= trx.getContent() %></td>
+                                <td><%= trx.getInAcctId() != null ? trx.getInAcctId() : "-" %></td>
+                                <td><%= trx.getOutAcctId() != null ? trx.getOutAcctId() : "-" %></td>
+                                <td class="text-end <%= amountClass %>">
+                                    <%= amountSign %><%= String.format("%,d", trx.getAmount()) %>원
                                 </td>
                                 <td class="text-center">
                                     <a href="#" class="btn btn-sm btn-outline-primary">
@@ -171,107 +202,18 @@
                                     </a>
                                 </td>
                             </tr>
-
+<%
+                                }
+                            } else {
+%>
                             <tr>
-                                <td>2026.09.02</td>
-                                <td>
-                                    <span class="badge bg-red-lt">지출</span>
-                                </td>
-                                <td>식비</td>
-                                <td>점심식사</td>
-                                <td>점심 식사</td>
-                                <td>-</td>
-                                <td>카카오뱅크 입출금</td>
-                                <td class="text-end text-danger fw-bold">
-                                    -12,000원
-                                </td>
-                                <td class="text-center">
-                                    <a href="#" class="btn btn-sm btn-outline-primary">
-                                        수정
-                                    </a>
+                                <td colspan="9" class="text-center">
+                                    등록된 거래내역이 없습니다.
                                 </td>
                             </tr>
-
-                            <tr>
-                                <td>2026.09.03</td>
-                                <td>
-                                    <span class="badge bg-blue-lt">이체</span>
-                                </td>
-                                <td>저축</td>
-                                <td>적금</td>
-                                <td>국민은행 적금 이체</td>
-                                <td>국민은행 적금</td>
-                                <td>카카오뱅크 입출금</td>
-                                <td class="text-end text-primary fw-bold">
-                                    500,000원
-                                </td>
-                                <td class="text-center">
-                                    <a href="#" class="btn btn-sm btn-outline-primary">
-                                        수정
-                                    </a>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>2026.09.04</td>
-                                <td>
-                                    <span class="badge bg-red-lt">지출</span>
-                                </td>
-                                <td>교통비</td>
-                                <td>대중교통</td>
-                                <td>교통카드 충전</td>
-                                <td>-</td>
-                                <td>카카오뱅크 입출금</td>
-                                <td class="text-end text-danger fw-bold">
-                                    -65,000원
-                                </td>
-                                <td class="text-center">
-                                    <a href="#" class="btn btn-sm btn-outline-primary">
-                                        수정
-                                    </a>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>2026.09.05</td>
-                                <td>
-                                    <span class="badge bg-red-lt">지출</span>
-                                </td>
-                                <td>주거비</td>
-                                <td>관리비</td>
-                                <td>아파트 관리비</td>
-                                <td>-</td>
-                                <td>카카오뱅크 입출금</td>
-                                <td class="text-end text-danger fw-bold">
-                                    -180,000원
-                                </td>
-                                <td class="text-center">
-                                    <a href="#" class="btn btn-sm btn-outline-primary">
-                                        수정
-                                    </a>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td>2026.09.06</td>
-                                <td>
-                                    <span class="badge bg-green-lt">수입</span>
-                                </td>
-                                <td>금융소득</td>
-                                <td>이자소득</td>
-                                <td>예금 이자</td>
-                                <td>카카오뱅크 입출금</td>
-                                <td>-</td>
-                                <td class="text-end text-success fw-bold">
-                                    +15,000원
-                                </td>
-                                <td class="text-center">
-                                    <a href="#" class="btn btn-sm btn-outline-primary">
-                                        수정
-                                    </a>
-                                </td>
-                            </tr>
-
+<%
+                            }
+%>
                         </tbody>
 
                     </table>

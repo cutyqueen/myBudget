@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import adm.dto.trxDto;
-import adm.svc.trxSvc;
+import adm.dto.cocdDto;
+import adm.svc.cocdSvc;
 
-@WebServlet("/trx/list")
-public class trxCtr extends HttpServlet {
+@WebServlet("/test/cocd")
+public class cocdTestCtr extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,21 +24,27 @@ public class trxCtr extends HttpServlet {
             HttpServletResponse response
     ) throws ServletException, IOException {
 
-        trxSvc trxSvc = new trxSvc();
+        cocdSvc cocdSvc = new cocdSvc();
 
-        List<trxDto> transactionList =
-                trxSvc.selectTransactionList("testuser");
+        List<cocdDto> codeList =
+                cocdSvc.selectCodeList(
+                        "TRAN_TYPE",
+                        "01"
+                );
 
         request.setAttribute(
-                "transactionList",
-                transactionList
+                "codeList",
+                codeList
         );
 
         RequestDispatcher dispatcher =
                 request.getRequestDispatcher(
-                        "/WEB-INF/views/trx/list.jsp"
+                        "/WEB-INF/views/test/cocd.jsp"
                 );
 
-        dispatcher.forward(request, response);
+        dispatcher.forward(
+                request,
+                response
+        );
     }
 }

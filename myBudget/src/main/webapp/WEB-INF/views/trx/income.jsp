@@ -1,9 +1,35 @@
 <%@ page language="java"
     contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="adm.dto.cocdDto" %>
+<%@ page import="adm.dto.accDto" %>
 
 <%
     request.setAttribute("pageTitle", "수입 등록 | myBudget");
+
+    List<cocdDto> incomeCatList =
+        (List<cocdDto>) request.getAttribute("incomeCatList");
+
+    List<accDto> accountList =
+        (List<accDto>) request.getAttribute("accountList");
+
+    // 대분류 중복 제거
+    List<cocdDto> incomeMajorList = new ArrayList<cocdDto>();
+    String prevLowCd = "";
+
+    if (incomeCatList != null) {
+        for (cocdDto code : incomeCatList) {
+            if (!prevLowCd.equals(code.getLowCd())) {
+                cocdDto major = new cocdDto();
+                major.setLowCd(code.getLowCd());
+                major.setLowNm(code.getLowNm());
+                incomeMajorList.add(major);
+                prevLowCd = code.getLowCd();
+            }
+        }
+    }
 %>
 
 <jsp:include page="/WEB-INF/views/com/header.jsp" />
@@ -64,6 +90,7 @@
                                            class="form-control"
                                            id="transactionDate"
                                            name="transactionDate"
+                                           value="<%= java.time.LocalDate.now() %>"
                                            required>
                                 </div>
 
@@ -77,15 +104,17 @@
                                             name="inAccount"
                                             required>
                                         <option value="">선택하세요</option>
-                                        <option value="카카오뱅크 입출금">
-                                            카카오뱅크 입출금
+<%
+    if (accountList != null) {
+        for (accDto account : accountList) {
+%>
+                                        <option value="<%= account.getAcctId() %>">
+                                            <%= account.getAcctNm() %>
                                         </option>
-                                        <option value="국민은행 적금">
-                                            국민은행 적금
-                                        </option>
-                                        <option value="현금">
-                                            현금
-                                        </option>
+<%
+        }
+    }
+%>
                                     </select>
                                 </div>
 
@@ -103,10 +132,17 @@
                                             name="majorCategory"
                                             required>
                                         <option value="">선택하세요</option>
-                                        <option value="근로소득">근로소득</option>
-                                        <option value="사업소득">사업소득</option>
-                                        <option value="금융소득">금융소득</option>
-                                        <option value="기타수입">기타수입</option>
+<%
+    if (incomeMajorList != null) {
+        for (cocdDto code : incomeMajorList) {
+%>
+                                        <option value="<%= code.getLowCd() %>">
+                                            <%= code.getLowNm() %>
+                                        </option>
+<%
+        }
+    }
+%>
                                     </select>
                                 </div>
 
@@ -120,10 +156,17 @@
                                             name="minorCategory"
                                             required>
                                         <option value="">선택하세요</option>
-                                        <option value="월급">월급</option>
-                                        <option value="보너스">보너스</option>
-                                        <option value="이자소득">이자소득</option>
-                                        <option value="부수입">부수입</option>
+<%
+    if (incomeCatList != null) {
+        for (cocdDto code : incomeCatList) {
+%>
+                                        <option value="<%= code.getValCd() %>">
+                                            <%= code.getValNm() %>
+                                        </option>
+<%
+        }
+    }
+%>
                                     </select>
                                 </div>
 
@@ -158,7 +201,7 @@
                                        id="content"
                                        name="content"
                                        maxlength="200"
-                                       placeholder="예: 9월 급여">
+                                       placeholder="예: 9 월 급여">
                             </div>
 
                             <div class="mb-3">
