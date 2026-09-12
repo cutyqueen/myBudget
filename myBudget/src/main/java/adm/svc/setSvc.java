@@ -63,10 +63,11 @@ public userDto getAccDate(String userId) {
     userDto user = null;
     try {
         conn = DBConn.getConnection();
-        String sql = "/* adm/svc/setSvc */\n" +
-        			 "SELECT set_year, set_month " +
-                     "FROM USERS " +
-                     "WHERE user_id = ?";
+        String sql = "/* setSvc.getAccDate */\n" +
+        			"SELECT set_year,\n" +
+        	        "       set_month\n" +
+        	        "FROM USERS\n" +
+        	        "WHERE user_id = ?";
 
         DBConn.logSql(sql, userId);
         pstmt = conn.prepareStatement(sql);
@@ -216,5 +217,15 @@ public setSvc(){
 }
 public int insertCatNm(String userId, String catType, String catNm){
     return catDao.insertCatNm(userId, catType, catNm);
+}
+
+//가계부설정-카테고리 소분류 추가
+public int insertSubCat(String userId,String catType,String catNm,String subCatNm,String fixYn){
+    return catDao.insertSubCat(userId,catType,catNm,subCatNm,fixYn);
+}
+
+//가계부설정-카테고리 소분류 저장
+public int updateCategory(String userId, String[] catIdList, String[] subCatNmList, String[] fixYnList){ 
+	return catDao.updateCategory(userId, catIdList, subCatNmList, fixYnList); 
 }
 }

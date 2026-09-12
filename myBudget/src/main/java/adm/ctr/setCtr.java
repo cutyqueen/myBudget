@@ -107,10 +107,48 @@ public class setCtr extends HttpServlet {
                 }else{
                     session.setAttribute("msg", "카테고리 추가에 실패했습니다.");
                 }
+             //카테고리 소분류 추가
+            }else if("insertSubCat".equals(action)){
 
+                String catType = request.getParameter("catType");
+                String catNm = request.getParameter("catNm");
+                String subCatNm = request.getParameter("subCatNm");
+                String fixYn = request.getParameter("fixYn");
+
+                int result = setSvc.insertSubCat(
+                        userId,
+                        catType,
+                        catNm,
+                        subCatNm,
+                        fixYn
+                );
+
+                if(result > 0){
+                    session.setAttribute("msg", "소분류가 추가되었습니다.");
+                }else{
+                    session.setAttribute("msg", "소분류 추가에 실패했습니다.");
+                }
+           //카테고리 소분류 저장
+            } else if("updateCategory".equals(action)){
+
+                String[] catIdList = request.getParameterValues("catIdList");
+                String[] subCatNmList = request.getParameterValues("subCatNmList");
+                String[] fixYnList = request.getParameterValues("fixYnList");
+
+                int result = setSvc.updateCategory(
+                        userId,
+                        catIdList,
+                        subCatNmList,
+                        fixYnList
+                );
+
+                if(result > 0){
+                    session.setAttribute("msg","카테고리가 저장되었습니다.");
+                }else{
+                    session.setAttribute("msg","저장 실패");
+                }
+           //회계기간 저장
             }else{
-
-                //회계기간 저장
                 String setYear  = request.getParameter("acctYear");
                 String setMonth = request.getParameter("acctMonth");
 

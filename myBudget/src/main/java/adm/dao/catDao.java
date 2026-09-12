@@ -139,7 +139,7 @@ public class catDao {
         return list;
     }
     
-    //가계부설정-카테고리 추가
+    //가계부설정-카테고리 대분류 추가
     public int insertCatNm(String userId, String catType, String catNm){
 
         String sql =
@@ -175,6 +175,106 @@ public class catDao {
             pstmt.setString(5,"N");
 
             result = pstmt.executeUpdate();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+    //가계부설정-카테고리 소분류 추가
+    public int insertSubCat(String userId, String catType, String catNm, String subCatNm, String fixYn){
+
+    	String sql =
+	        "/* catDao.insertSubCat */\n" +
+	        "INSERT INTO CATEGORY (\n" +
+	        "    CAT_ID,\n" +
+	        "    USER_ID,\n" +
+	        "    CAT_TYPE,\n" +
+	        "    CAT_NM,\n" +
+	        "    SUB_CAT_NM,\n" +
+	        "    FIX_YN,\n" +
+	        "    USE_YN,\n" +
+	        "    CREAT_DT,\n" +
+	        "    MODIFY_DT\n" +
+	        ") VALUES (\n" +
+	        "    (SELECT NVL(MAX(CAT_ID),0)+1 FROM CATEGORY),\n" +
+	        "    ?, ?, ?, ?, ?, 'Y', SYSDATE, SYSDATE\n" +
+	        ")";
+        int result = 0;
+
+        try(
+            Connection conn = DBConn.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)
+        ){
+
+            DBConn.logSql(sql,userId,catType,catNm,subCatNm,fixYn);
+
+            pstmt.setString(1,userId);
+            pstmt.setString(2,catType);
+            pstmt.setString(3,catNm);
+            pstmt.setString(4,subCatNm);
+            pstmt.setString(5,fixYn);
+
+            result = pstmt.executeUpdate();
+
+            System.out.println("SUB CATEGORY INSERT RESULT = " + result);
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+    //가계부설정-카테고리 소분류 저장
+    public int updateCategory(
+            String userId,
+            String[] catIdList,
+            String[] subCatNmList,
+            String[] fixYnList
+    ){
+
+        int result = 0;
+
+        String sql =
+            "/* catDao.updateCategory */\n" +
+            "UPDATE CATEGORY \n" +
+            "SET SUB_CAT_NM = ?, \n" +
+            "    FIX_YN = ?, \n" +
+            "    MODIFY_DT = SYSDATE \n" +
+            "WHERE USER_ID = ? \n" +
+            "AND CAT_ID = ?";
+
+
+        try(
+            Connection conn = DBConn.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)
+        ){
+
+            for(int i=0; i<catIdList.length; i++){
+
+                System.out.println(
+                    "index=" + i +
+                    " / catId=" + catIdList[i] +
+                    " / subCatNm=" + subCatNmList[i] +
+                    " / fixYn=" + fixYnList[i]
+                );
+
+                pstmt.setString(1, subCatNmList[i]);
+                pstmt.setString(2, fixYnList[i]);
+                pstmt.setString(3, userId);
+                pstmt.setString(4, catIdList[i]);
+
+                result += pstmt.executeUpdate();
+
+                DBConn.logSql(
+                    sql,
+                    subCatNmList[i],
+                    fixYnList[i],
+                    userId,
+                    catIdList[i]
+                );
+            }
 
         }catch(Exception e){
             e.printStackTrace();

@@ -164,7 +164,11 @@ String setMonth = request.getAttribute("setMonth") != null
 				</div>
 				<div class="text-end mt-2 edit-area d-none">
 				<div class="d-flex align-items-center gap-1 mt-1 edit-area d-none">
-				<button class="btn btn-sm btn-light text-success border py-0 px-2">
+				<button type="button" class="btn btn-sm btn-light text-success border py-0 px-1 edit-area d-none"
+				data-bs-toggle="modal"
+				data-bs-target="#addSubCatModal"
+				data-cat-type="<%=group.getCatType()%>"
+				data-cat-nm="<%=group.getCatNm()%>">
 				<i class="bi bi-plus-circle"></i> 소분류 추가
 				</button>
 				<button class="btn btn-sm btn-light text-primary border py-0 px-1">
@@ -185,12 +189,18 @@ String setMonth = request.getAttribute("setMonth") != null
 				<div class="col-md-4">
 				<div class="border rounded p-2 d-flex justify-content-between align-items-center">
 				<label class="form-check mb-0">
-				<input class="form-check-input fix-check" type="checkbox" <%= "Y".equals(cat.getFixYn()) ? "checked" : "" %> disabled>
-				<span class="ms-2"><%=cat.getSubCatNm()%></span>
+				<input class="form-check-input fix-check" type="checkbox" data-id="<%=cat.getCatId()%>" <%= "Y".equals(cat.getFixYn()) ? "checked" : "" %> disabled>
+				<span class="ms-2 sub-cat-name" id="subCat_<%=cat.getCatId()%>"><%=cat.getSubCatNm()%></span>
 				</label>
+				
 				<div class="edit-area d-none">
-				<button class="btn btn-sm btn-light text-primary" title="수정"><i class="bi bi-pencil"></i></button>
-				<button class="btn btn-sm btn-light text-danger" title="삭제"><i class="bi bi-trash"></i></button>
+				<button type="button" class="btn btn-sm btn-light text-primary" title="수정" onclick="editSubCat('<%=cat.getCatId()%>')">
+				<i class="bi bi-pencil"></i>
+				</button>
+				
+				<button type="button" class="btn btn-sm btn-light text-danger" title="삭제">
+				<i class="bi bi-trash"></i>
+				</button>
 				</div>
 				</div>
 				</div>
@@ -297,7 +307,6 @@ String setMonth = request.getAttribute("setMonth") != null
 </div>
 
 <!-- 대분류 추가 Modal -->
-<!-- 대분류 추가 Modal -->
 <div class="modal fade" id="addCatModal" tabindex="-1">
 <div class="modal-dialog modal-dialog-centered">
 <div class="modal-content">
@@ -341,9 +350,62 @@ String setMonth = request.getAttribute("setMonth") != null
 </div>
 </div>
 
+
+<!-- 소분류 추가 Modal -->
+<div class="modal fade" id="addSubCatModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+
+<form action="<%=request.getContextPath()%>/set" method="post">
+
+<input type="hidden" name="action" value="insertSubCat">
+
+<input type="hidden" id="subCatType" name="catType">
+<input type="hidden" id="subCatNm" name="catNm">
+
+<div class="modal-header">
+<h5 class="modal-title">소분류 추가</h5>
+<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+<div class="modal-body">
+
+<div class="mb-3">
+<label class="form-label">대분류</label>
+<input type="text" class="form-control" id="showCatNm" readonly>
+</div>
+
+<div class="mb-3">
+<label class="form-label">소분류명</label>
+<input type="text" class="form-control" name="subCatNm">
+</div>
+
+<div class="mb-3">
+<label class="form-label">고정수입ㆍ지출여부</label>
+<select class="form-select" name="fixYn">
+<option value="N">변동</option>
+<option value="Y">고정</option>
+</select>
+</div>
+
+</div>
+
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+<button type="submit" class="btn btn-primary">
+<i class="bi bi-save"></i> 저장
+</button>
+</div>
+
+</form>
+
+</div>
+</div>
+</div>
+
 <script>
 function toggleEdit(){
-
+	//대분류 모달
     let editArea = document.querySelectorAll(".edit-area");
     let editBtn = document.getElementById("editBtn");
     let checks = document.querySelectorAll(".fix-check");
@@ -356,15 +418,99 @@ function toggleEdit(){
         check.disabled = !check.disabled;
     });
 
-    if(editBtn.innerText == "편집"){
-        editBtn.innerText = "저장";
+    if(editBtn.classList.contains("btn-outline-primary")){
+
+        editBtn.innerHTML='<i class="bi bi-save"></i> 저장';
         editBtn.classList.remove("btn-outline-primary");
         editBtn.classList.add("btn-outline-success");
+
     }else{
-        editBtn.innerText = "편집";
+
+        /* editBtn.innerHTML='<i class="bi bi-pencil-square"></i> 편집';
         editBtn.classList.remove("btn-outline-success");
-        editBtn.classList.add("btn-outline-primary");
+        editBtn.classList.add("btn-outline-primary"); */
+    	saveCategory();
+
     }
+}
+	//소분류 모달
+	document.querySelectorAll('[data-bs-target="#addSubCatModal"]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+
+    document.getElementById('subCatType').value = this.dataset.catType;
+    document.getElementById('subCatNm').value = this.dataset.catNm;
+    document.getElementById('showCatNm').value = this.dataset.catNm;
+
+    });
+
+});
+	//소분류 명칭수정
+	function editSubCat(catId){
+
+    let span = document.getElementById("subCat_"+catId);
+    let oldName = span.innerText;
+
+    span.innerHTML =
+    '<input type="text" class="form-control form-control-sm sub-edit" data-id="'+catId+'" value="'+oldName+'">';
+
+	}
+	
+//소분류 편집 저장
+function saveCategory(){
+
+    let form = document.createElement("form");
+
+    form.method = "post";
+    form.action = "<%=request.getContextPath()%>/set";
+
+    let action = document.createElement("input");
+    action.type="hidden";
+    action.name="action";
+    action.value="updateCategory";
+
+    form.appendChild(action);
+
+    console.log("CAT ID");
+    document.querySelectorAll(".fix-check").forEach(function(check){
+
+        let catId = document.createElement("input");
+        catId.type="hidden";
+        catId.name="catIdList";
+        catId.value=check.dataset.id;
+
+        let fixYn = document.createElement("input");
+        fixYn.type="hidden";
+        fixYn.name="fixYnList";
+        fixYn.value=check.checked ? "Y" : "N";
+
+        form.appendChild(catId);
+        form.appendChild(fixYn);
+
+    });
+    console.log("SUB NAME");
+
+    document.querySelectorAll(".sub-cat-name").forEach(function(span){
+
+        let subNm = document.createElement("input");
+        subNm.type="hidden";
+        subNm.name="subCatNmList";
+
+        let input = span.querySelector("input");
+
+        if(input){
+            subNm.value = input.value;
+        }else{
+            subNm.value = span.textContent.trim();
+        }
+
+        form.appendChild(subNm);
+
+    });
+
+
+    document.body.appendChild(form);
+    form.submit();
+
 }
 </script>
 
