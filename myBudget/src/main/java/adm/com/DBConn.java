@@ -23,13 +23,26 @@ public class DBConn {
 
     // SQL 로그 출력용 메서드 추가
     public static void logSql(String sql, Object... params) {
+
         System.out.println("/*======== SQL ========*/");
+
+        if (params != null) {
+
+            for (Object param : params) {
+
+                String value;
+
+                if (param == null) {
+                    value = "NULL";
+                } else {
+                    value = "'" + param.toString() + "'";
+                }
+
+                sql = sql.replaceFirst("\\?", value);
+            }
+        }
+
         System.out.println(sql);
         System.out.println();
-		/*
-		 * if (params != null && params.length > 0) { System.out.print("Parameters: ");
-		 * for (int i = 0; i < params.length; i++) { System.out.print("[" + (i + 1) +
-		 * "]=" + params[i] + " "); } System.out.println(); }
-		 */
     }
 }

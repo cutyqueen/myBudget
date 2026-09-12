@@ -53,7 +53,7 @@ public class loginCtr extends HttpServlet {
         if (isAuthenticated) {
             HttpSession session = request.getSession();
             session.setAttribute("loginUser", userId);
-
+            
             System.out.println("리다이렉트: /trx/list");
 
             response.sendRedirect(

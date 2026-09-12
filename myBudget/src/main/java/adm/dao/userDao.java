@@ -45,26 +45,30 @@ public class userDao {
     
     /* 회원가입 */
     public int insertUser(userDto user) {
-        StringBuilder sql = new StringBuilder();
-
-        sql.append(" INSERT INTO USERS ( ");
-        sql.append("     USER_ID, ");
-        sql.append("     USER_NM, ");
-        sql.append("     PW, ");
-        sql.append("     EMAIL, ");
-        sql.append("     MBPNO, ");
-        sql.append("     SET_YEAR, ");
-        sql.append("     SET_MONTH, ");
-        sql.append("     BEGIN_DT, ");
-        sql.append("     STATUS, ");
-        sql.append("     CREAT_DT, ");
-        sql.append("     MODIFY_DT ");
-        sql.append(" ) VALUES ( ");
-        sql.append("     ?, ?, ?, ?, ?, ");
-        sql.append("     NULL, NULL, "); // SET_MONTH, SET_YEAR 
-        sql.append("     SYSDATE, '01', SYSDATE, SYSDATE");
-        sql.append(" ) ");
-
+        String sql =
+        	    "/* userDao.insertUser */\n" +
+        	    "INSERT INTO USERS (\n" +
+        	    "    USER_ID,\n" +
+        	    "    USER_NM,\n" +
+        	    "    PW,\n" +
+        	    "    EMAIL,\n" +
+        	    "    MBPNO,\n" +
+        	    "    SET_YEAR,\n" +
+        	    "    SET_MONTH,\n" +
+        	    "    BEGIN_DT,\n" +
+        	    "    STATUS,\n" +
+        	    "    CREAT_DT,\n" +
+        	    "    MODIFY_DT\n" +
+        	    ") VALUES (\n" +
+        	    "    ?, ?, ?, ?, ?,\n" +
+        	    "    TO_CHAR(SYSDATE, 'YYYY'),\n" +
+        	    "    TO_CHAR(SYSDATE, 'MM'),\n" +
+        	    "    SYSDATE,\n" +
+        	    "    '01',\n" +
+        	    "    SYSDATE,\n" +
+        	    "    SYSDATE\n" +
+        	    ")";
+        DBConn.logSql(sql.toString(), user.getUserId(), user.getUserNm(), user.getPw(), user.getEmail(), user.getMbpno());
         try (
             Connection conn = DBConn.getConnection();
             PreparedStatement pstmt =
@@ -134,5 +138,36 @@ public class userDao {
 
         return list;
     }
-
+    
+    /* 가계부 설정 - 회계기준일 저장 */
+    public int updateAccDate(String userId, String setYear, String setMonth) {
+        String sql = "/* userDao.updateAccDate */\n" +
+                     "UPDATE USERS\n" +
+                     "   SET SET_YEAR = ?,\n" +
+                     "       SET_MONTH = ?,\n" +
+                     "       MODIFY_DT = SYSDATE\n" +
+                     " WHERE USER_ID = ?";
+        DBConn.logSql(sql, new Object[]{setYear, setMonth, userId});
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        try {
+            conn = DBConn.getConnection();
+            pstmt = conn.prepareStatement(sql);
+            int idx = 1;
+            pstmt.setString(idx++, setYear);
+            pstmt.setString(idx++, setMonth);
+            pstmt.setString(idx++, userId);
+            
+            int result = pstmt.executeUpdate();
+            System.out.println("UPDATE 완료");
+            System.out.println("UPDATE COUNT = " + result);
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        } finally {
+            try { if (pstmt != null) pstmt.close(); } catch (Exception e2) {}
+            try { if (conn != null) conn.close(); } catch (Exception e2) {}
+        }
+    }
 }

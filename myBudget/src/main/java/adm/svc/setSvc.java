@@ -9,6 +9,7 @@ import java.util.List;
 import adm.dto.noticeDto;
 import adm.dto.userDto;
 import adm.com.DBConn;
+import adm.dao.userDao;
 
 
 public class setSvc {
@@ -52,7 +53,7 @@ public class setSvc {
     }
     
 //회계기간 조회
-public userDto getAccountingPeriod(String userId) {
+public userDto getAccDate(String userId) {
     Connection conn = null;
     PreparedStatement pstmt = null;
     java.sql.ResultSet rs = null;
@@ -144,5 +145,26 @@ public List<noticeDto> getNoticeByMenu(String noticeMenu) {
 
     return noticeList;
 }
+
+
+// 회계 기준일 업데이트
+private userDao userDao = new userDao();
+public int updateAccDate(String userId, String setYear, String setMonth) {
+
+    // 1) 검증
+    if (userId == null || userId.trim().isEmpty()) {
+        throw new IllegalArgumentException("사용자 ID 가 없습니다.");
+    }
+    if (setYear == null || !setYear.matches("\\d{4}")) {
+        throw new IllegalArgumentException("년도 형식이 올바르지 않습니다.");
+    }
+    if (setMonth == null || !setMonth.matches("0[1-9]|1[0-2]")) {
+        throw new IllegalArgumentException("월 형식이 올바르지 않습니다.");
+    }
+
+    // 2) DAO 호출
+    return userDao.updateAccDate(userId, setYear.trim(), setMonth.trim());
+}
+
     
 }
