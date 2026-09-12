@@ -79,12 +79,12 @@ public class noticeCtr extends HttpServlet {
 
         if ("/write".equals(action)) {
             // 등록 처리
-            noticeDto notice = new noticeDto();
-            notice.setNoticeMenu(request.getParameter("noticeMenu"));
-            notice.setTitle(request.getParameter("title"));
-            notice.setContent(request.getParameter("content"));
-            notice.setSort(request.getParameter("sort"));
-            notice.setUseYn(request.getParameter("useYn"));
+        	noticeDto notice = new noticeDto();
+        	notice.setNoticeMenu(request.getParameter("noticeMenu"));
+        	notice.setPosition(request.getParameter("position"));
+        	notice.setTitle(request.getParameter("title"));
+        	notice.setContent(request.getParameter("content"));
+        	notice.setUseYn(request.getParameter("useYn"));
 
             noticeSvc.insertNotice(notice);
 

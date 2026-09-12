@@ -244,16 +244,24 @@ String setMonth = request.getAttribute("setMonth") != null
 						<h3 class="card-title">자산/부채 계좌 관리</h3>
 					</div>
 					<div class="card-body">
-
-						<div class="alert alert-info">
-							<strong>입력 가이드</strong>
-							<p class="mb-0 mt-2">
-								모든 자산과 부채를 입력하세요.<br> <strong>[숨기기]</strong> 기능은 더이상 사용하지
-								않는 계좌를 숨기는 기능입니다. 잔액이 0 인 계좌만 숨기기 기능을 사용할 수 있습니다. (잔액이 남아있을 경우
-								계산이 달라집니다.)
-							</p>
-						</div>
-
+					<%
+					List<noticeDto> settingNoticeList2 = 
+					    (List<noticeDto>) request.getAttribute("settingNoticeList");
+					if (settingNoticeList != null) {
+					    for (noticeDto settingNotice : settingNoticeList) {
+					        if ("MID".equals(settingNotice.getPosition())) {
+					%>
+					        <div class="alert alert-info">
+					            <strong><%= settingNotice.getTitle() %></strong>
+					            <div class="mb-0 mt-2">
+					                <%= settingNotice.getContent().replace("\n", "<br>") %>
+					            </div>
+					        </div>
+					<%
+					        }
+					    }
+					}
+					%>
 						<div class="card mt-3">
 							<div class="card-header">
 								<h4 class="card-subtitle">내 계좌 목록</h4>

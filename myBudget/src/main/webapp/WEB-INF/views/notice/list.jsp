@@ -69,7 +69,9 @@
                                                 <tr>
                                                     <th style="width: 60px;">순서</th>
                                                     <th>제목</th>
+                                                    <th>내용</th>
                                                     <th>사용메뉴</th>
+                                                    <th>노출위치</th>
                                                     <th style="width: 100px;">사용여부</th>
                                                     <th style="width: 150px;">관리</th>
                                                 </tr>
@@ -85,7 +87,9 @@
                                                 <tr>
                                                     <td><%= idx %></td>
                                                     <td><%= notice.getTitle() %></td>
+                                                    <td><%= notice.getContent() %></td>
                                                     <td><%= notice.getNoticeMenu() %></td>
+                                                    <td><%= notice.getPosition() %></td>
                                                     <td class="text-center">
                                                         <% if ("Y".equals(notice.getUseYn())) { %>
                                                             <span>Y</span>

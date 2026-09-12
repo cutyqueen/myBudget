@@ -23,7 +23,7 @@ public class noticeSvc {
             String sql = "/* adm/svc/noticeSvc */\n" +
                     "SELECT A.NOTICE_ID,\n" +
                     "       A.NOTICE_MENU,\n" +
-                    "       A.NOTICE_TYPE,\n" +
+                    "       A.POSITION,\n" +
                     "       A.TITLE,\n" +
                     "       A.CONTENT,\n" +
                     "       A.USE_YN,\n" +
@@ -41,7 +41,7 @@ public class noticeSvc {
 
                 notice.setNoticeId(rs.getString("NOTICE_ID"));
                 notice.setNoticeMenu(rs.getString("NOTICE_MENU"));
-                notice.setUseMenu(rs.getString("NOTICE_TYPE"));
+                notice.setPosition(rs.getString("POSITION"));
                 notice.setTitle(rs.getString("TITLE"));
                 notice.setContent(rs.getString("CONTENT"));
                 notice.setUseYn(rs.getString("USE_YN"));
@@ -84,7 +84,7 @@ public class noticeSvc {
             String sql = "/* adm/svc/noticeSvc */\n" +
                     "SELECT A.NOTICE_ID,\n" +
                     "       A.NOTICE_MENU,\n" +
-                    "       A.NOTICE_TYPE,\n" +
+                    "       A.POSITION,\n" +
                     "       A.TITLE,\n" +
                     "       A.CONTENT,\n" +
                     "       A.USE_YN,\n" +
@@ -102,7 +102,7 @@ public class noticeSvc {
 
                 notice.setNoticeId(rs.getString("NOTICE_ID"));
                 notice.setNoticeMenu(rs.getString("NOTICE_MENU"));
-                notice.setUseMenu(rs.getString("NOTICE_TYPE"));
+                notice.setUseMenu(rs.getString("POSITION"));
                 notice.setTitle(rs.getString("TITLE"));
                 notice.setContent(rs.getString("CONTENT"));
                 notice.setUseYn(rs.getString("USE_YN"));
@@ -145,7 +145,7 @@ public class noticeSvc {
                     "INSERT INTO NOTICE (\n" +
                     "       NOTICE_ID,\n" +
                     "       NOTICE_MENU,\n" +
-                    "       NOTICE_TYPE,\n" +
+                    "       POSITION,\n" +
                     "       TITLE,\n" +
                     "       CONTENT,\n" +
                     "       USE_YN,\n" +
@@ -154,7 +154,7 @@ public class noticeSvc {
                     ") VALUES (\n" +
                     "       SEQ_NOTICE.NEXTVAL,\n" +
                     "       UPPER(?),\n" +
-                    "       SEQ_NOTICE.NEXTVAL,\n" +
+                    "       ?,\n" +
                     "       ?,\n" +
                     "       ?,\n" +
                     "       ?,\n" +
@@ -173,9 +173,10 @@ public class noticeSvc {
             pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, notice.getNoticeMenu());
-            pstmt.setString(2, notice.getTitle());
-            pstmt.setString(3, notice.getContent());
-            pstmt.setString(4, notice.getUseYn());
+            pstmt.setString(2, notice.getPosition());
+            pstmt.setString(3, notice.getTitle());
+            pstmt.setString(4, notice.getContent());
+            pstmt.setString(5, notice.getUseYn());
 
             result = pstmt.executeUpdate();
 

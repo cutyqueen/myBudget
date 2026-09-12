@@ -44,6 +44,14 @@
                             <textarea name="content" class="form-control" rows="10" required></textarea>
                         </div>
                         <div class="mb-3">
+                            <label class="form-label">노출위치</label>
+                            <select name="position" class="form-select">
+                                <option value="TOP" selected>상단(TOP)</option>
+                                <option value="MID">중간(MID)</option>
+                                <option value="BOTTOM">하단(BOTTOM)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
                             <label class="form-label">사용여부</label>
                             <select name="useYn" class="form-select">
                                 <option value="Y" selected>사용</option>
