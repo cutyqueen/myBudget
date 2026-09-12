@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"%>
+
+<%@ page import="adm.dto.noticeDto" %>
+<%@ page import="java.util.List" %>
+
 <%
 request.setAttribute("pageTitle", "가계부 설정 | myBudget");
 
@@ -7,11 +11,15 @@ request.setAttribute("pageTitle", "가계부 설정 | myBudget");
 String currentYear = String.valueOf(java.time.LocalDate.now().getYear());
 String currentMonth = String.format("%02d", java.time.LocalDate.now().getMonthValue());
 
-String setYear = request.getAttribute("setYear") != null ? 
-                 (String)request.getAttribute("setYear") : currentYear;
-String setMonth = request.getAttribute("setMonth") != null ? 
-                  (String)request.getAttribute("setMonth") : currentMonth;
+String setYear = request.getAttribute("setYear") != null
+        ? (String) request.getAttribute("setYear")
+        : currentYear;
+
+String setMonth = request.getAttribute("setMonth") != null
+        ? (String) request.getAttribute("setMonth")
+        : currentMonth;
 %>
+
 <jsp:include page="/WEB-INF/views/com/header.jsp" />
 <jsp:include page="/WEB-INF/views/com/sidebar.jsp" />
 
@@ -103,23 +111,30 @@ String setMonth = request.getAttribute("setMonth") != null ?
 						</div>
 					</div>
 				</div>
-
 				<!-- 섹션 2: 카테고리 설정 -->
 				<div class="card mb-4">
-					<div class="card-header">
-						<h3 class="card-title">카테고리 설정</h3>
-					</div>
-					<div class="card-body">
-
-						<div class="alert alert-info">
-							<strong>설정 가이드</strong>
-							<ul class="mb-0 mt-2">
-								<li>대분류와 소분류를 상황에 맞게 수정하여 사용하세요.</li>
-								<li>"현금·예금" 대분류는 수정하지 않고 그대로 사용하세요.</li>
-								<li>매월 일정한 고정수입, 고정지출은 체크하세요. 고정/변동 비율을 보고서에서 확인하실 수 있습니다.</li>
-							</ul>
-						</div>
-
+				    <div class="card-header">
+				        <h3 class="card-title">카테고리 설정</h3>
+				    </div>
+				    <div class="card-body">
+				<%
+				List<noticeDto> settingNoticeList = 
+				    (List<noticeDto>) request.getAttribute("settingNoticeList");
+				if (settingNoticeList != null) {
+				    for (noticeDto settingNotice : settingNoticeList) {
+				        if ("TOP".equals(settingNotice.getPosition())) {
+				%>
+				        <div class="alert alert-info">
+				            <strong><%= settingNotice.getTitle() %></strong>
+				            <div class="mb-0 mt-2">
+				                <%= settingNotice.getContent().replace("\n", "<br>") %>
+				            </div>
+				        </div>
+				<%
+				        }
+				    }
+				}
+				%>
 						<!-- 대분류 목록 -->
 						<div class="card mt-3">
 							<div class="card-header">

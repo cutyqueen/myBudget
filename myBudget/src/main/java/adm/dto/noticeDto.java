@@ -10,6 +10,7 @@ public class noticeDto {
     private String useYn;
     private String creatDt;
     private String modifyDt;
+    private String position;
 
     public String getNoticeId() { return noticeId; }
     public void setNoticeId(String noticeId) { this.noticeId = noticeId; }
@@ -33,4 +34,6 @@ public class noticeDto {
     public void setCreatDt(String creatDt) { this.creatDt = creatDt; }
     public String getModifyDt() { return modifyDt; }
     public void setModifyDt(String modifyDt) { this.modifyDt = modifyDt; }
+    public String getPosition() {return position;}
+    public void setPosition(String position) {this.position = position;    }
 }

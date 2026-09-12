@@ -23,18 +23,13 @@ public class noticeSvc {
             String sql = "/* adm/svc/noticeSvc */\n" +
                     "SELECT A.NOTICE_ID,\n" +
                     "       A.NOTICE_MENU,\n" +
-                    "       B.VAL_NM AS USE_MENU,\n" +
+                    "       A.NOTICE_TYPE,\n" +
                     "       A.TITLE,\n" +
                     "       A.CONTENT,\n" +
                     "       A.USE_YN,\n" +
                     "       A.CREAT_DT,\n" +
                     "       A.MODIFY_DT\n" +
-                    "  FROM NOTICE A,\n" +
-                    "       COCD B\n" +
-                    " WHERE A.NOTICE_MENU = B.VAL_CD(+)\n" +
-                    "   AND B.UP_CD(+) = 'NOTICE'\n" +
-                    "   AND B.LOW_CD(+) = 'MENU'";
-
+                    "  FROM NOTICE A";
             DBConn.logSql(sql, noticeMenu);
 
             pstmt = conn.prepareStatement(sql);
@@ -46,7 +41,7 @@ public class noticeSvc {
 
                 notice.setNoticeId(rs.getString("NOTICE_ID"));
                 notice.setNoticeMenu(rs.getString("NOTICE_MENU"));
-                notice.setUseMenu(rs.getString("USE_MENU"));
+                notice.setUseMenu(rs.getString("NOTICE_TYPE"));
                 notice.setTitle(rs.getString("TITLE"));
                 notice.setContent(rs.getString("CONTENT"));
                 notice.setUseYn(rs.getString("USE_YN"));
@@ -89,17 +84,13 @@ public class noticeSvc {
             String sql = "/* adm/svc/noticeSvc */\n" +
                     "SELECT A.NOTICE_ID,\n" +
                     "       A.NOTICE_MENU,\n" +
-                    "       B.VAL_NM AS USE_MENU,\n" +
+                    "       A.NOTICE_TYPE,\n" +
                     "       A.TITLE,\n" +
                     "       A.CONTENT,\n" +
                     "       A.USE_YN,\n" +
                     "       A.CREAT_DT,\n" +
                     "       A.MODIFY_DT\n" +
-                    "  FROM NOTICE A,\n" +
-                    "       COCD B\n" +
-                    " WHERE A.NOTICE_MENU = B.VAL_CD(+)\n" +
-                    "   AND B.UP_CD(+) = 'NOTICE'\n" +
-                    "   AND B.LOW_CD(+) = 'MENU'";
+                    "  FROM NOTICE A";
             DBConn.logSql(sql, noticeId);
 
             pstmt = conn.prepareStatement(sql);
@@ -111,7 +102,7 @@ public class noticeSvc {
 
                 notice.setNoticeId(rs.getString("NOTICE_ID"));
                 notice.setNoticeMenu(rs.getString("NOTICE_MENU"));
-                notice.setUseMenu(rs.getString("USE_MENU"));
+                notice.setUseMenu(rs.getString("NOTICE_TYPE"));
                 notice.setTitle(rs.getString("TITLE"));
                 notice.setContent(rs.getString("CONTENT"));
                 notice.setUseYn(rs.getString("USE_YN"));
@@ -154,6 +145,7 @@ public class noticeSvc {
                     "INSERT INTO NOTICE (\n" +
                     "       NOTICE_ID,\n" +
                     "       NOTICE_MENU,\n" +
+                    "       NOTICE_TYPE,\n" +
                     "       TITLE,\n" +
                     "       CONTENT,\n" +
                     "       USE_YN,\n" +
@@ -161,7 +153,8 @@ public class noticeSvc {
                     "       MODIFY_DT\n" +
                     ") VALUES (\n" +
                     "       SEQ_NOTICE.NEXTVAL,\n" +
-                    "       ?,\n" +
+                    "       UPPER(?),\n" +
+                    "       SEQ_NOTICE.NEXTVAL,\n" +
                     "       ?,\n" +
                     "       ?,\n" +
                     "       ?,\n" +
@@ -214,7 +207,7 @@ public class noticeSvc {
 
             String sql = "/* adm/svc/noticeSvc */\n" +
                     "UPDATE NOTICE\n" +
-                    "   SET NOTICE_MENU = ?,\n" +
+                    "   SET NOTICE_MENU = UPPER(?),\n" +
                     "       TITLE = ?,\n" +
                     "       CONTENT = ?,\n" +
                     "       USE_YN = ?,\n" +

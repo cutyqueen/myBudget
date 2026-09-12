@@ -24,7 +24,7 @@
                             <label class="form-label">사용메뉴</label>
                             <select name="noticeMenu" class="form-select" required>
                                 <option value="">-- 선택 --</option>
-                                <option value="setting">가계부 설정</option>
+                                <option value="set">가계부 설정</option>
                                 <option value="guide">사용가이드</option>
                                 <option value="record">가계부 기록</option>
                                 <option value="monthly_report">월간보고서</option>

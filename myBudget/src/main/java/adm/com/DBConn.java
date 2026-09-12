@@ -25,13 +25,11 @@ public class DBConn {
     public static void logSql(String sql, Object... params) {
         System.out.println("/*======== SQL ========*/");
         System.out.println(sql);
-        if (params != null && params.length > 0) {
-            System.out.print("Parameters: ");
-            for (int i = 0; i < params.length; i++) {
-                System.out.print("[" + (i + 1) + "]=" + params[i] + " ");
-            }
-            System.out.println();
-        }
-        System.out.println("/*=====================*/");
+        System.out.println();
+		/*
+		 * if (params != null && params.length > 0) { System.out.print("Parameters: ");
+		 * for (int i = 0; i < params.length; i++) { System.out.print("[" + (i + 1) +
+		 * "]=" + params[i] + " "); } System.out.println(); }
+		 */
     }
 }

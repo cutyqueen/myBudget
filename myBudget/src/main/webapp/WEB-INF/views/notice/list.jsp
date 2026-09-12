@@ -85,7 +85,7 @@
                                                 <tr>
                                                     <td><%= idx %></td>
                                                     <td><%= notice.getTitle() %></td>
-                                                    <td><%= notice.getUseMenu() %></td>
+                                                    <td><%= notice.getNoticeMenu() %></td>
                                                     <td class="text-center">
                                                         <% if ("Y".equals(notice.getUseYn())) { %>
                                                             <span>Y</span>

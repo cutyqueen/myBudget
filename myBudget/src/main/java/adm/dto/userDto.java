@@ -12,7 +12,7 @@ public class userDto {
     private String beginDt;
     private String status;
     private String statusNm;
-
+    
     // getter, setter
     public String getUserId() { return userId; }
     public void setUserId(String userId) { this.userId = userId; }
