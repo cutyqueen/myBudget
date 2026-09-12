@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import adm.dao.catDao;
+import adm.dto.catDto;
+import adm.dto.catGroupDto;
 import adm.dto.noticeDto;
 import adm.dto.userDto;
 import adm.svc.noticeSvc;
@@ -39,31 +42,32 @@ public class setCtr extends HttpServlet {
         String setYear;
         String setMonth;
 
-        if (user != null 
-                && user.getSetYear() != null 
-                && user.getSetMonth() != null) {
-
-            // 저장된 값 사용
+        if (user != null && user.getSetYear() != null && user.getSetMonth() != null) {
+            // DB값 조회
             setYear = user.getSetYear();
             setMonth = user.getSetMonth();
 
         } else {
-
-            // 저장값 없으면 현재 날짜 사용
+            // DB값 없으면 현재 날짜 사용
             java.time.LocalDate now = java.time.LocalDate.now();
-
             setYear = String.valueOf(now.getYear());
             setMonth = String.format("%02d", now.getMonthValue());
         }
-
-
         request.setAttribute("setYear", setYear);
         request.setAttribute("setMonth", setMonth);
 
         // 페이지별 공지사항 조회
         List<noticeDto> noticeList = setSvc.getNoticeByMenu("SET");
-
         request.setAttribute("settingNoticeList", noticeList);
+        
+        //가계부설정-카테고리 조회
+        catDao catDao = new catDao();
+
+        List<catDto> categoryList = catDao.findCategory(userId);
+        List<catGroupDto> categoryGroup = setSvc.groupCategory(categoryList);
+
+        request.setAttribute("categoryList", categoryList);
+        request.setAttribute("categoryGroup", categoryGroup);
         
         RequestDispatcher dispatcher =
                 request.getRequestDispatcher(
@@ -83,34 +87,50 @@ public class setCtr extends HttpServlet {
 
         HttpSession session = request.getSession();
         String userId = (String) session.getAttribute("loginUser");
-        
-        //회계기간 저장
-        String setYear  = request.getParameter("acctYear");
-        String setMonth = request.getParameter("acctMonth");
 
         setSvc setSvc = new setSvc();
 
-        try {
-        	System.out.println("1. updateAccDate 호출 전");
-            System.out.println("userId = " + userId);
-            System.out.println("setYear = " + setYear);
-            System.out.println("setMonth = " + setMonth);
-            int result = setSvc.updateAccDate(userId, setYear, setMonth);
-            System.out.println("2. updateAccDate 결과 = " + result);
+        String action = request.getParameter("action");
 
-            if (result > 0) {
-                session.setAttribute("msg", "회계 기준일이 저장되었습니다.");
-            } else {
-                session.setAttribute("msg", "저장에 실패했습니다.");
+        try {
+
+            //카테고리 대분류 추가
+            if("insertCatNm".equals(action)){
+
+                String catType = request.getParameter("catType");
+                String catNm = request.getParameter("catNm");
+
+                int result = setSvc.insertCatNm(userId, catType, catNm);
+
+                if(result > 0){
+                    session.setAttribute("msg", "카테고리가 추가되었습니다.");
+                }else{
+                    session.setAttribute("msg", "카테고리 추가에 실패했습니다.");
+                }
+
+            }else{
+
+                //회계기간 저장
+                String setYear  = request.getParameter("acctYear");
+                String setMonth = request.getParameter("acctMonth");
+
+                int result = setSvc.updateAccDate(userId, setYear, setMonth);
+
+                if(result > 0){
+                    session.setAttribute("msg", "회계 기준일이 저장되었습니다.");
+                }else{
+                    session.setAttribute("msg", "저장에 실패했습니다.");
+                }
             }
-        } catch (Exception e) {
+
+        }catch(Exception e){
             e.printStackTrace();
             session.setAttribute("msg", "오류가 발생했습니다: " + e.getMessage());
         }
-        
-        System.out.println("3. set.jsp 이동");
+
         response.sendRedirect(
                 request.getContextPath() + "/set"
         );
     }
+    
 }

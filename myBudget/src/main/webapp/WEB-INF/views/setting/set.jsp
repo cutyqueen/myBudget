@@ -2,7 +2,9 @@
     pageEncoding="UTF-8"%>
 
 <%@ page import="adm.dto.noticeDto" %>
+<%@ page import="adm.dto.catDto" %>
 <%@ page import="java.util.List" %>
+<%@ page import="adm.dto.catGroupDto" %>
 
 <%
 request.setAttribute("pageTitle", "가계부 설정 | myBudget");
@@ -111,12 +113,7 @@ String setMonth = request.getAttribute("setMonth") != null
 						</div>
 					</div>
 				</div>
-				<!-- 섹션 2: 카테고리 설정 -->
-				<div class="card mb-4">
-				    <div class="card-header">
-				        <h3 class="card-title">카테고리 설정</h3>
-				    </div>
-				    <div class="card-body">
+				<!-- 섹션 2: 공지사항 -->
 				<%
 				List<noticeDto> settingNoticeList = 
 				    (List<noticeDto>) request.getAttribute("settingNoticeList");
@@ -124,7 +121,7 @@ String setMonth = request.getAttribute("setMonth") != null
 				    for (noticeDto settingNotice : settingNoticeList) {
 				        if ("TOP".equals(settingNotice.getPosition())) {
 				%>
-				        <div class="alert alert-info">
+				        <div class="alert alert-light">
 				            <strong><%= settingNotice.getTitle() %></strong>
 				            <div class="mb-0 mt-2">
 				                <%= settingNotice.getContent().replace("\n", "<br>") %>
@@ -135,109 +132,80 @@ String setMonth = request.getAttribute("setMonth") != null
 				    }
 				}
 				%>
-						<!-- 대분류 목록 -->
-						<div class="card mt-3">
-							<div class="card-header">
-								<h4 class="card-subtitle">대분류 관리</h4>
-							</div>
-							<div class="card-body">
-								<table class="table table-bordered">
-									<thead>
-										<tr>
-											<th style="width: 50px;">순서</th>
-											<th>대분류명</th>
-											<th style="width: 150px;">아이콘</th>
-											<th style="width: 150px;">관리</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td><input type="number"
-												class="form-control form-control-sm" value="1" min="1"></td>
-											<td>현금·예금</td>
-											<td><input type="text"
-												class="form-control form-control-sm" value="💰" readonly></td>
-											<td>
-												<button class="btn btn-sm btn-outline-primary">수정</button>
-											</td>
-										</tr>
-										<tr>
-											<td><input type="number"
-												class="form-control form-control-sm" value="2" min="1"></td>
-											<td>수입</td>
-											<td><input type="text"
-												class="form-control form-control-sm" value="💵"></td>
-											<td>
-												<button class="btn btn-sm btn-outline-primary">수정</button>
-												<button class="btn btn-sm btn-outline-danger">삭제</button>
-											</td>
-										</tr>
-										<tr>
-											<td><input type="number"
-												class="form-control form-control-sm" value="3" min="1"></td>
-											<td>지출</td>
-											<td><input type="text"
-												class="form-control form-control-sm" value="💸"></td>
-											<td>
-												<button class="btn btn-sm btn-outline-primary">수정</button>
-												<button class="btn btn-sm btn-outline-danger">삭제</button>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-
-								<button class="btn btn-outline-success mt-2">+ 대분류 추가</button>
-							</div>
-						</div>
-
-						<!-- 소분류 목록 -->
-						<div class="card mt-3">
-							<div class="card-header">
-								<h4 class="card-subtitle">소분류 관리 (수입)</h4>
-							</div>
-							<div class="card-body">
-								<table class="table table-bordered">
-									<thead>
-										<tr>
-											<th style="width: 50px;">순서</th>
-											<th>소분류명</th>
-											<th style="width: 80px;">고정</th>
-											<th style="width: 150px;">관리</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td><input type="number"
-												class="form-control form-control-sm" value="1" min="1"></td>
-											<td>월급</td>
-											<td class="text-center"><input type="checkbox"
-												class="form-check-input" checked></td>
-											<td>
-												<button class="btn btn-sm btn-outline-primary">수정</button>
-												<button class="btn btn-sm btn-outline-danger">삭제</button>
-											</td>
-										</tr>
-										<tr>
-											<td><input type="number"
-												class="form-control form-control-sm" value="2" min="1"></td>
-											<td>부수입</td>
-											<td class="text-center"><input type="checkbox"
-												class="form-check-input"></td>
-											<td>
-												<button class="btn btn-sm btn-outline-primary">수정</button>
-												<button class="btn btn-sm btn-outline-danger">삭제</button>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-
-								<button class="btn btn-outline-success mt-2">+ 소분류 추가</button>
-							</div>
-						</div>
-
-					</div>
+				<!-- 카테고리 관리 -->
+				<div class="d-flex justify-content-between align-items-center mb-3">
+				<h4 class="fw-bold mb-0">카테고리 관리</h4>
+				<div>
+				<button type="button" class="btn btn-outline-success btn-sm me-2 edit-area d-none" data-bs-toggle="modal" data-bs-target="#addCatModal"><i class="bi bi-folder-plus"></i> 대분류 추가</button>
+				<button type="button" class="btn btn-outline-primary btn-sm" id="editBtn" onclick="toggleEdit()"><i class="bi bi-pencil-square"></i> 편집</button>
+				</div>
+				</div>
+				<table class="table table-bordered align-middle">
+				<thead class="table-light text-center">
+				<tr>
+				<th style="width:120px;">구분</th>
+				<th style="width:220px;">대분류</th>
+				<th>소분류 (고정수입, 고정지출에 ☑️체크 하세요)</th>
+				</tr>
+				</thead>
+				<tbody>
+				<%
+				List<catGroupDto> categoryGroup = (List<catGroupDto>)request.getAttribute("categoryGroup");
+				String beforeType = "";
+				for(catGroupDto group : categoryGroup){
+				%>
+				<tr>
+				<td class="text-center fw-bold <%= "ASSET".equals(group.getCatType()) ? "table-primary" : "DEBT".equals(group.getCatType()) ? "table-danger" : "INCOME".equals(group.getCatType()) ? "table-success" : "table-warning" %>">
+				<%= !beforeType.equals(group.getCatType()) ? ("ASSET".equals(group.getCatType()) ? "자산" : "DEBT".equals(group.getCatType()) ? "부채" : "INCOME".equals(group.getCatType()) ? "수입" : "지출") : "" %>
+				</td>
+				<td class="fw-bold">
+				<div class="d-flex justify-content-between align-items-center">
+				<span><%=group.getCatNm()%></span>
+				</div>
+				<div class="text-end mt-2 edit-area d-none">
+				<div class="d-flex align-items-center gap-1 mt-1 edit-area d-none">
+				<button class="btn btn-sm btn-light text-success border py-0 px-2">
+				<i class="bi bi-plus-circle"></i> 소분류 추가
+				</button>
+				<button class="btn btn-sm btn-light text-primary border py-0 px-1">
+				<i class="bi bi-pencil"></i>
+				</button>
+				<button class="btn btn-sm btn-light text-danger border py-0 px-1">
+				<i class="bi bi-trash"></i>
+				</button>
 				</div>
 
+				</div>
+				</td>
+				<td>
+				<div class="row g-2">
+				<%
+				for(catDto cat : group.getSubList()){
+				%>
+				<div class="col-md-4">
+				<div class="border rounded p-2 d-flex justify-content-between align-items-center">
+				<label class="form-check mb-0">
+				<input class="form-check-input fix-check" type="checkbox" <%= "Y".equals(cat.getFixYn()) ? "checked" : "" %> disabled>
+				<span class="ms-2"><%=cat.getSubCatNm()%></span>
+				</label>
+				<div class="edit-area d-none">
+				<button class="btn btn-sm btn-light text-primary" title="수정"><i class="bi bi-pencil"></i></button>
+				<button class="btn btn-sm btn-light text-danger" title="삭제"><i class="bi bi-trash"></i></button>
+				</div>
+				</div>
+				</div>
+				<%
+				}
+				%>
+				</div>
+				</td>
+				</tr>
+				<%
+				beforeType = group.getCatType();
+				}
+				%>
+				</tbody>
+				</table>
 				<!-- 섹션 3: 자산/부채 계좌 입력 -->
 				<div class="card mb-4">
 					<div class="card-header">
@@ -327,5 +295,77 @@ String setMonth = request.getAttribute("setMonth") != null
 		</div>
 	</div>
 </div>
+
+<!-- 대분류 추가 Modal -->
+<!-- 대분류 추가 Modal -->
+<div class="modal fade" id="addCatModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+
+<form action="<%=request.getContextPath()%>/set" method="post">
+
+<input type="hidden" name="action" value="insertCatNm">
+
+<div class="modal-header">
+<h5 class="modal-title">대분류 추가</h5>
+<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+<div class="modal-body">
+
+<div class="mb-3">
+<label class="form-label">구분</label>
+<select class="form-select" name="catType">
+<option value="ASSET">자산</option>
+<option value="DEBT">부채</option>
+<option value="INCOME">수입</option>
+<option value="EXPENSE">지출</option>
+</select>
+</div>
+
+<div class="mb-3">
+<label class="form-label">대분류명</label>
+<input type="text" class="form-control" name="catNm">
+</div>
+
+</div>
+
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+<button type="submit" class="btn btn-primary">저장</button>
+</div>
+
+</form>
+
+</div>
+</div>
+</div>
+
+<script>
+function toggleEdit(){
+
+    let editArea = document.querySelectorAll(".edit-area");
+    let editBtn = document.getElementById("editBtn");
+    let checks = document.querySelectorAll(".fix-check");
+
+    editArea.forEach(function(item){
+        item.classList.toggle("d-none");
+    });
+
+    checks.forEach(function(check){
+        check.disabled = !check.disabled;
+    });
+
+    if(editBtn.innerText == "편집"){
+        editBtn.innerText = "저장";
+        editBtn.classList.remove("btn-outline-primary");
+        editBtn.classList.add("btn-outline-success");
+    }else{
+        editBtn.innerText = "편집";
+        editBtn.classList.remove("btn-outline-success");
+        editBtn.classList.add("btn-outline-primary");
+    }
+}
+</script>
 
 <jsp:include page="/WEB-INF/views/com/footer.jsp" />

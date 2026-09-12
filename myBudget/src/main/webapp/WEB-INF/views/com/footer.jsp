@@ -9,5 +9,6 @@
     <script src="${pageContext.request.contextPath}/assets/js/vendor.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/app.min.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/sidebarmenu.min.js"></script>
+	<script src="${pageContext.request.contextPath}/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

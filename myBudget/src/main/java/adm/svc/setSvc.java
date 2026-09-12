@@ -6,9 +6,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import adm.dto.catDto;
+import adm.dto.catGroupDto;
 import adm.dto.noticeDto;
 import adm.dto.userDto;
 import adm.com.DBConn;
+import adm.dao.catDao;
 import adm.dao.userDao;
 
 
@@ -166,5 +169,52 @@ public int updateAccDate(String userId, String setYear, String setMonth) {
     return userDao.updateAccDate(userId, setYear.trim(), setMonth.trim());
 }
 
-    
+//가계부설정-카테고리 조회
+public List<catGroupDto> groupCategory(List<catDto> list){
+    List<catGroupDto> groupList = new ArrayList<>();
+
+    for(catDto cat : list){
+        catGroupDto group = null;
+
+        for(catGroupDto g : groupList){
+            if(g.getCatType().equals(cat.getCatType()) && g.getCatNm().equals(cat.getCatNm())){
+                group = g;
+                break;
+            }
+        }
+
+        if(group == null){
+            group = new catGroupDto();
+            group.setCatType(cat.getCatType());
+            group.setCatNm(cat.getCatNm());
+            group.setSubList(new ArrayList<>());
+            groupList.add(group);
+        }
+
+        boolean exists = false;
+
+        for(catDto sub : group.getSubList()){
+            if(sub.getSubCatNm().equals(cat.getSubCatNm())){
+                exists = true;
+                break;
+            }
+        }
+
+        if(!exists){
+            group.getSubList().add(cat);
+        }
+    }
+
+    return groupList;
+}
+
+//가계부설정-카테고리 대분류 추가
+private catDao catDao;
+
+public setSvc(){
+    catDao = new catDao();
+}
+public int insertCatNm(String userId, String catType, String catNm){
+    return catDao.insertCatNm(userId, catType, catNm);
+}
 }

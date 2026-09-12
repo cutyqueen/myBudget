@@ -8,6 +8,7 @@
     
     <!-- MatDash CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/styles.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <style>
         /* 사이드바 영역 확보 */

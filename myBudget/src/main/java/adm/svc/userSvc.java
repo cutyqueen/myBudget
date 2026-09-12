@@ -3,14 +3,17 @@ package adm.svc;
 import java.util.List;
 
 import adm.dao.userDao;
+import adm.dao.catDao;
 import adm.dto.userDto;
 
 public class userSvc {
 
     private userDao userDao;
+    private catDao catDao;
 
     public userSvc() {
         userDao = new userDao();
+        catDao = new catDao();
     }
 
     public List<userDto> selectAllUsers() {
@@ -21,13 +24,24 @@ public class userSvc {
         return userDao.authenticate(userId, userPassword);
     }
     
+    /* 회원가입 */
     public int insertUser(userDto user) {
-        // 전화번호 하이픈 제거
+
         if (user.getMbpno() != null) {
             user.setMbpno(user.getMbpno().replace("-", ""));
         }
-        return userDao.insertUser(user);
+
+        int result = userDao.insertUser(user);
+
+        if (result > 0) {
+
+            int catResult = catDao.insertCategory(user.getUserId());
+
+            if (catResult <= 0) {
+                return 0;
+            }
+        }
+
+        return result;
     }
-    
-    
 }
