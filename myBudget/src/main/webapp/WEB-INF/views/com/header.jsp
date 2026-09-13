@@ -57,27 +57,6 @@
             <div class="left-sidebar" data-sidebarbg="dark">
                 <nav class="sidebar-nav">
                     <ul class="sidebar-menu">
-                        <li class="sidebar-item">
-                        	<a>header.jsp</a>
-                            <a href="${pageContext.request.contextPath}/trx/list" class="sidebar-link">
-                                <span>거래내역</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="${pageContext.request.contextPath}/trx/income" class="sidebar-link">
-                                <span>수입 등록</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="${pageContext.request.contextPath}/trx/expense" class="sidebar-link">
-                                <span>지출 등록</span>
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a href="${pageContext.request.contextPath}/set" class="sidebar-link">
-                                <span>가계부 설정</span>
-                            </a>
-                        </li>
                         <!-- 시트별 목록 -->
                         <!-- 사용가이드 -->
                         <li class="sidebar-item">

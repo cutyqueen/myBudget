@@ -4,7 +4,7 @@
 
 <%
     if (session.getAttribute("loginUser") != null) {
-        response.sendRedirect(request.getContextPath() + "/board/main");
+        response.sendRedirect(request.getContextPath() + "/set");
     } else {
         response.sendRedirect(request.getContextPath() + "/user/login");
     }
