@@ -282,4 +282,62 @@ public class catDao {
 
         return result;
     }
+//카테고리 소분류 삭제
+    public int deleteSubCat(String userId,String catId){
+
+        String sql =
+        "/* catDao.deleteSubCat */\n" +
+        "DELETE FROM CATEGORY " +
+        "WHERE USER_ID = ? " +
+        "AND CAT_ID = ?";
+
+        int result = 0;
+
+        try(
+            Connection conn = DBConn.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)
+        ){
+
+            DBConn.logSql(sql,userId,catId);
+
+            pstmt.setString(1,userId);
+            pstmt.setString(2,catId);
+
+            result = pstmt.executeUpdate();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+//카테고리 대분류 삭제
+    public int deleteCat(String userId,String catNm){
+
+        String sql =
+        "/* catDao.deleteCat */\n" +
+        "DELETE FROM CATEGORY " +
+        "WHERE USER_ID = ? " +
+        "AND CAT_NM = ?";
+
+        int result = 0;
+
+        try(
+            Connection conn = DBConn.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)
+        ){
+
+            DBConn.logSql(sql,userId,catNm);
+
+            pstmt.setString(1,userId);
+            pstmt.setString(2,catNm);
+
+            result = pstmt.executeUpdate();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 }

@@ -164,6 +164,7 @@ String setMonth = request.getAttribute("setMonth") != null
 				</div>
 				<div class="text-end mt-2 edit-area d-none">
 				<div class="d-flex align-items-center gap-1 mt-1 edit-area d-none">
+				<!-- 소분류 추가 -->
 				<button type="button" class="btn btn-sm btn-light text-success border py-0 px-1 edit-area d-none"
 				data-bs-toggle="modal"
 				data-bs-target="#addSubCatModal"
@@ -171,10 +172,12 @@ String setMonth = request.getAttribute("setMonth") != null
 				data-cat-nm="<%=group.getCatNm()%>">
 				<i class="bi bi-plus-circle"></i> 소분류 추가
 				</button>
+				<!-- 대분류 수정 -->
 				<button class="btn btn-sm btn-light text-primary border py-0 px-1">
 				<i class="bi bi-pencil"></i>
 				</button>
-				<button class="btn btn-sm btn-light text-danger border py-0 px-1">
+				<!-- 대분류 삭제 -->
+				<button type="button" class="btn btn-sm btn-light text-danger border py-0 px-1" onclick="deleteCat('<%=group.getCatNm()%>')">
 				<i class="bi bi-trash"></i>
 				</button>
 				</div>
@@ -192,13 +195,13 @@ String setMonth = request.getAttribute("setMonth") != null
 				<input class="form-check-input fix-check" type="checkbox" data-id="<%=cat.getCatId()%>" <%= "Y".equals(cat.getFixYn()) ? "checked" : "" %> disabled>
 				<span class="ms-2 sub-cat-name" id="subCat_<%=cat.getCatId()%>"><%=cat.getSubCatNm()%></span>
 				</label>
-				
+				<!-- 소분류수정 -->
 				<div class="edit-area d-none">
 				<button type="button" class="btn btn-sm btn-light text-primary" title="수정" onclick="editSubCat('<%=cat.getCatId()%>')">
 				<i class="bi bi-pencil"></i>
 				</button>
-				
-				<button type="button" class="btn btn-sm btn-light text-danger" title="삭제">
+				<!-- 소분류삭제 -->
+				<button type="button" class="btn btn-sm btn-light text-danger" onclick="deleteSubCat('<%=cat.getCatId()%>', '<%=cat.getSubCatNm()%>', '<%=group.getCatNm()%>','<%=group.getSubList().size()%>')">
 				<i class="bi bi-trash"></i>
 				</button>
 				</div>
@@ -227,9 +230,9 @@ String setMonth = request.getAttribute("setMonth") != null
 					    (List<noticeDto>) request.getAttribute("settingNoticeList");
 					if (settingNoticeList != null) {
 					    for (noticeDto settingNotice : settingNoticeList) {
-					        if ("MID".equals(settingNotice.getPosition())) {
+					        if ("TOP".equals(settingNotice.getPosition())) {
 					%>
-					        <div class="alert alert-info">
+					        <div class="alert alert-light">
 					            <strong><%= settingNotice.getTitle() %></strong>
 					            <div class="mb-0 mt-2">
 					                <%= settingNotice.getContent().replace("\n", "<br>") %>
@@ -470,7 +473,6 @@ function saveCategory(){
 
     form.appendChild(action);
 
-    console.log("CAT ID");
     document.querySelectorAll(".fix-check").forEach(function(check){
 
         let catId = document.createElement("input");
@@ -487,14 +489,12 @@ function saveCategory(){
         form.appendChild(fixYn);
 
     });
-    console.log("SUB NAME");
 
     document.querySelectorAll(".sub-cat-name").forEach(function(span){
 
         let subNm = document.createElement("input");
         subNm.type="hidden";
         subNm.name="subCatNmList";
-
         let input = span.querySelector("input");
 
         if(input){
@@ -502,10 +502,76 @@ function saveCategory(){
         }else{
             subNm.value = span.textContent.trim();
         }
-
         form.appendChild(subNm);
-
     });
+    document.body.appendChild(form);
+    form.submit();
+
+}
+//카테고리 소분류 삭제
+function deleteSubCat(catId, subCatNm, catNm, subCount){
+
+    if(subCount <= 1){
+        alert("'" + catNm + "' 대분류 내에 소분류가 최소 1개 이상 존재해야 하므로 삭제할 수 없습니다.");
+        return;
+    }
+
+    if(!confirm("'" + subCatNm + "' 소분류가 삭제됩니다.")){
+        return;
+    }
+
+    let form=document.createElement("form");
+
+    form.method="post";
+    form.action="<%=request.getContextPath()%>/set";
+
+    let action=document.createElement("input");
+    action.type="hidden";
+    action.name="action";
+    action.value="deleteSubCat";
+
+    let id=document.createElement("input");
+    id.type="hidden";
+    id.name="catId";
+    id.value=catId;
+
+
+    form.appendChild(action);
+    form.appendChild(id);
+
+    document.body.appendChild(form);
+
+    form.submit();
+
+}
+//카테고리 대분류 삭제
+function deleteCat(catNm){
+
+    if(!confirm("'" + catNm + "'에 포함된 소분류 전체가 삭제됩니다.")){
+        return;
+    }
+
+
+    let form = document.createElement("form");
+
+    form.method = "post";
+    form.action="<%=request.getContextPath()%>/set";
+
+
+    let action=document.createElement("input");
+    action.type="hidden";
+    action.name="action";
+    action.value="deleteCat";
+
+
+    let name=document.createElement("input");
+    name.type="hidden";
+    name.name="catNm";
+    name.value=catNm;
+
+
+    form.appendChild(action);
+    form.appendChild(name);
 
 
     document.body.appendChild(form);

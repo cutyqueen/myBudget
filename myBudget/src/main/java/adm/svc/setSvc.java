@@ -228,4 +228,9 @@ public int insertSubCat(String userId,String catType,String catNm,String subCatN
 public int updateCategory(String userId, String[] catIdList, String[] subCatNmList, String[] fixYnList){ 
 	return catDao.updateCategory(userId, catIdList, subCatNmList, fixYnList); 
 }
+//카테고리 삭제
+//소분류 삭제
+public int deleteSubCat(String userId,String catId){ return catDao.deleteSubCat(userId,catId); }
+//대분류 삭제
+public int deleteCat(String userId,String catNm){ return catDao.deleteCat(userId,catNm); }
 }

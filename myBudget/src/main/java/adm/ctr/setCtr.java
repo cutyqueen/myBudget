@@ -147,6 +147,30 @@ public class setCtr extends HttpServlet {
                 }else{
                     session.setAttribute("msg","저장 실패");
                 }
+            //카테고리 삭제
+            } else if("deleteSubCat".equals(action)){
+
+                String catId = request.getParameter("catId");
+
+                int result = setSvc.deleteSubCat(userId, catId);
+
+                if(result > 0){
+                    session.setAttribute("msg","소분류가 삭제되었습니다.");
+                }else{
+                    session.setAttribute("msg","삭제 실패");
+                }
+
+            }else if("deleteCat".equals(action)){
+
+                String catNm = request.getParameter("catNm");
+
+                int result = setSvc.deleteCat(userId, catNm);
+
+                if(result > 0){
+                    session.setAttribute("msg","대분류가 삭제되었습니다.");
+                }else{
+                    session.setAttribute("msg","삭제 실패");
+                }
            //회계기간 저장
             }else{
                 String setYear  = request.getParameter("acctYear");
