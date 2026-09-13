@@ -39,4 +39,41 @@ public class accSvc {
             useYnList
         );
     }
+  //자산/부채 추가
+    public int insertAccount(
+        String userId,
+        String catType,
+        String catId,
+        String catNm,
+        String subCatNm,
+        String title,
+        String startAmount,
+        String remrk,
+        String useYn
+    ){
+
+        accDto dto = new accDto();
+
+        dto.setAccountId(accDao.getNextAccountId());
+        dto.setSortNo(accDao.getNextSortNo(userId, catType));
+
+        dto.setUserId(userId);
+        dto.setCatType(catType);
+        dto.setCatId(catId == null || catId.equals("") ? 0 : Integer.parseInt(catId));
+        dto.setCatNm(catNm);
+        dto.setSubCatNm(subCatNm);
+        dto.setTitle(title);
+        dto.setStartAmount(Long.parseLong(startAmount));
+        dto.setRemrk(remrk);
+        dto.setUseYn(useYn);
+
+        return accDao.insertAccount(dto);
+
+    }
+    //자산 삭제
+    public int deleteAccount(String userId,String[] accountIdList){
+
+        return accDao.deleteAccount(userId, accountIdList);
+
+    }
 }

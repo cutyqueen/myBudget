@@ -54,5 +54,6 @@ public class accDto {
 
     public String getModifyDt(){ return modifyDt; }
     public void setModifyDt(String modifyDt){ this.modifyDt = modifyDt; }
+    
 
 }

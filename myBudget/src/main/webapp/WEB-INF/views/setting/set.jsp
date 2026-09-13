@@ -221,11 +221,12 @@ String setMonth = request.getAttribute("setMonth") != null
 				</tbody>
 				</table>
 				<!-- 섹션 3: 자산/부채 계좌 입력 -->
-				<div class="card mb-4">
+				<div class="card mb-4 w-100">
+					
 					<div class="card-header">
-						<h3 class="card-title">자산/부채 계좌 관리</h3>
+					<h3 class="card-title">자산/부채 계좌 관리</h3>
 					</div>
-					<div class="card-body">
+					<div class="card-body"></div>
 					<%
 					List<noticeDto> settingNoticeList2 = 
 					    (List<noticeDto>) request.getAttribute("settingNoticeList");
@@ -248,17 +249,23 @@ String setMonth = request.getAttribute("setMonth") != null
 					<%
 					List<accDto> accountList = (List<accDto>)request.getAttribute("accountList");
 					%>
-					<div class="table-responsive mt-3">
-					<!-- 자산/부채 편집 -->
-					<div class="d-flex justify-content-end mb-3">
-					<button type="button" class="btn btn-outline-primary btn-sm" id="editBtn" onclick="toggleAccountEdit()">
+					<!-- 자산 CRUD -->
+					<div class="d-flex justify-content-end align-items-center mb-3 pe-0 me-n2">
+					<button type="button" class="btn btn-outline-success btn-sm ms-2" id="addAccountBtn" onclick="openAccountModal()">
+					<i class="bi bi-plus-circle"></i> 추가
+					</button>
+					<button type="button" class="btn btn-outline-primary btn-sm ms-2" id="accountEditBtn" onclick="toggleAccountEdit()">
 					<i class="bi bi-pencil-square"></i> 편집
 					</button>
-					<!-- 자산/부채 저장 -->
-					<button type="button" class="btn btn-outline-success btn-sm ms-2" id="saveBtn" onclick="saveAccountEdit()">
+					<button type="button" class="btn btn-outline-success btn-sm ms-2 d-none" id="saveBtn" onclick="saveAccountEdit()">
 					<i class="bi bi-check-lg"></i> 저장
 					</button>
+					<button type="button" class="btn btn-outline-secondary btn-sm ms-2 d-none" id="cancelBtn" onclick="location.reload()">
+					<i class="bi bi-x-lg"></i> 취소
+					</button>
+					<div id="accountDeleteArea"></div>
 					</div>
+					
 					<table class="table table-bordered table-hover align-middle text-center" style="table-layout:fixed;">
 					<thead class="table-light text-center">
 					<tr>
@@ -269,6 +276,7 @@ String setMonth = request.getAttribute("setMonth") != null
 					<th style="width:140px;">시작금액</th>
 					<th style="width:250px;">메모</th>
 					<th style="width:100px;">숨기기</th>
+					<th class="delete-col d-none" style="width:80px;">삭제</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -327,6 +335,15 @@ String setMonth = request.getAttribute("setMonth") != null
 					<%= "N".equals(acc.getUseYn()) ? "checked" : "" %>
 					disabled>
 					</td>
+					<!-- 삭제버튼 -->
+					<td class="text-center delete-col d-none">
+					<button type="button"
+					class="btn btn-sm btn-outline-danger account-delete-btn"
+					data-id="<%=acc.getAccountId()%>"
+					onclick="deleteAccountRow(this)">
+					<i class="bi bi-trash"></i>
+					</button>
+					</td>
 					</tr>
 					<%
 					}
@@ -342,7 +359,6 @@ String setMonth = request.getAttribute("setMonth") != null
 					%>
 					</tbody>
 					</table>
-					</div>
 					</div>
 				</div>
 			</form>
@@ -439,6 +455,102 @@ String setMonth = request.getAttribute("setMonth") != null
 <button type="submit" class="btn btn-primary">
 <i class="bi bi-save"></i> 저장
 </button>
+</div>
+
+</form>
+
+</div>
+</div>
+</div>
+
+<!-- 자산/부채 추가 Modal -->
+<div class="modal fade" id="addAccountModal" tabindex="-1">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+
+<form action="<%=request.getContextPath()%>/set" method="post">
+
+<input type="hidden" name="action" value="insertAccount">
+
+<div class="modal-header">
+<h5 class="modal-title">자산/부채 추가</h5>
+<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+
+<div class="modal-body">
+
+<!-- 구분 -->
+<div class="mb-3">
+<label class="form-label">구분</label>
+<select class="form-select" id="accountCatType" name="catType" onchange="changeAccountCatType(this)">
+<option value="ASSET">자산</option>
+<option value="DEBT">부채</option>
+</select>
+</div>
+
+
+<!-- 대분류 -->
+<div class="mb-3">
+<label class="form-label">대분류</label>
+<input type="hidden" id="accountCatId" name="catId">
+<select class="form-select" id="accountCatNm" name="catNm" onchange="changeAccountCatNm(this)">
+</select>
+</div>
+
+
+<!-- 소분류 -->
+<div class="mb-3">
+<label class="form-label">소분류</label>
+<select class="form-select" id="accountSubCatNm" name="subCatNm">
+</select>
+</div>
+
+
+<!-- 이름 -->
+<div class="mb-3">
+<label class="form-label">이름</label>
+<input type="text" class="form-control" name="title">
+</div>
+
+
+<!-- 시작금액 -->
+<div class="mb-3">
+<label class="form-label">시작금액</label>
+<input type="number" class="form-control" name="startAmount" value="0">
+</div>
+
+
+<!-- 메모 -->
+<div class="mb-3">
+<label class="form-label">메모</label>
+<textarea class="form-control" name="remrk"></textarea>
+</div>
+
+
+<!-- 사용여부 -->
+<div class="mb-3">
+<label class="form-label">사용여부</label>
+<select class="form-select" name="useYn">
+<option value="Y">사용</option>
+<option value="N">숨김</option>
+</select>
+</div>
+
+
+</div>
+
+
+<div class="modal-footer">
+
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+취소
+</button>
+
+<button type="submit" class="btn btn-primary">
+<i class="bi bi-save"></i> 저장
+</button>
+
 </div>
 
 </form>
@@ -614,74 +726,43 @@ function deleteCat(catNm){
     form.submit();
 
 }
-
-//자산부채 구분, 대분류, 소분류 조회
 function saveAccountEdit(){
-
     let form=document.createElement("form");
     form.method="post";
     form.action="<%=request.getContextPath()%>/set";
-
     let action=document.createElement("input");
     action.type="hidden";
     action.name="action";
     action.value="updateAccount";
     form.appendChild(action);
-
-
     document.querySelectorAll(".edit-title").forEach(function(item){
-
         addHidden(form,"accountIdList",item.dataset.id);
         addHidden(form,"titleList",item.value);
-
     });
-
-
     document.querySelectorAll(".edit-amount").forEach(function(item){
         addHidden(form,"amountList",item.value);
     });
-
-
     document.querySelectorAll(".edit-remrk").forEach(function(item){
         addHidden(form,"remrkList",item.value);
     });
-
     document.querySelectorAll(".edit-cat-type").forEach(function(item){
-
         addHidden(form,"catTypeList",item.value);
-
     });
-
-
     document.querySelectorAll(".edit-cat-nm").forEach(function(item){
-
         addHidden(form,"catNmList",item.value);
-
     });
-
-
     document.querySelectorAll(".edit-sub-cat-nm").forEach(function(item){
-
         addHidden(form,"subCatNmList",item.value);
-
     });
-    
-    //숨기기
     document.querySelectorAll(".use-check").forEach(function(item){
-
-        addHidden(
-            form,
-            "useYnList",
-            item.checked ? "N" : "Y"
-        );
-
+        addHidden(form,"useYnList",item.checked?"N":"Y");
     });
-    
+    document.querySelectorAll("input[name='deleteAccountList']").forEach(function(item){
+        form.appendChild(item);
+    });
     document.body.appendChild(form);
     form.submit();
-
 }
-
 
 function addHidden(form,name,value){
 
@@ -692,10 +773,12 @@ function addHidden(form,name,value){
 
     form.appendChild(input);
 
-}
-function toggleAccountEdit(){
+}function toggleAccountEdit(){
 
-    let btn = document.getElementById("editBtn");
+	let btn = document.getElementById("accountEditBtn");
+    let saveBtn = document.getElementById("saveBtn");
+    let addBtn = document.getElementById("addAccountBtn");
+    let cancelBtn = document.getElementById("cancelBtn");
 
     if(btn.innerText.includes("편집")){
 
@@ -705,7 +788,7 @@ function toggleAccountEdit(){
             let id = span.id.replace("catType_","");
 
             span.innerHTML =
-            '<select class="form-select form-select-sm edit-cat-type" data-id="'+id+'" onchange="changeCatType(this)">' +
+            '<select class="form-select form-select-sm edit-cat-type account-select" data-id="'+id+'" onchange="changeCatType(this)">' +
             '<option value="ASSET" '+(value=="ASSET"?"selected":"")+'>자산</option>' +
             '<option value="DEBT" '+(value=="DEBT"?"selected":"")+'>부채</option>' +
             '</select>';
@@ -717,12 +800,10 @@ function toggleAccountEdit(){
 
             let oldValue = span.innerText;
             let id = span.id.replace("catNm_","");
-
             let catType = document.querySelector("#catType_"+id).dataset.value;
 
             let html =
             '<select class="form-select form-select-sm edit-cat-nm" data-id="'+id+'" onchange="changeCatNm(this)">';
-
 
             categoryData.filter(function(item){
                 return item.catType == catType;
@@ -731,7 +812,6 @@ function toggleAccountEdit(){
                 html += '<option value="'+item.catNm+'" '+(oldValue==item.catNm?"selected":"")+'>'+item.catNm+'</option>';
 
             });
-
 
             html += '</select>';
 
@@ -751,11 +831,17 @@ function toggleAccountEdit(){
             '</select>';
 
         });
-        
+
+
         document.querySelectorAll(".use-check").forEach(function(check){
             check.disabled = false;
         });
-     // 이름 수정
+
+        //삭제
+        document.querySelectorAll(".delete-col").forEach(function(col){
+		    col.classList.remove("d-none");
+		});
+
         document.querySelectorAll(".account-title").forEach(function(span){
 
             let id = span.id.replace("title_","");
@@ -765,31 +851,34 @@ function toggleAccountEdit(){
 
         });
 
-        // 시작금액 수정
-       document.querySelectorAll(".account-amount").forEach(function(item){
 
-		    let id=item.id.replace("amount_","");
-		    let oldAmount=item.innerText.replace(/,/g,"").trim();
-		
-		    item.innerHTML =
-		    '<input type="number" class="form-control form-control-sm edit-amount" data-id="'+id+'" value="'+oldAmount+'">';
-		
-		});
+        document.querySelectorAll(".account-amount").forEach(function(item){
 
-        // 메모 수정
+            let id=item.id.replace("amount_","");
+            let oldAmount=item.innerText.replace(/,/g,"").trim();
+
+            item.innerHTML =
+            '<input type="number" class="form-control form-control-sm edit-amount" data-id="'+id+'" value="'+oldAmount+'">';
+
+        });
+
+
         document.querySelectorAll(".account-remrk").forEach(function(span){
 
             let id = span.id.replace("remrk_","");
 
             span.innerHTML =
-            	'<input type="text" class="form-control form-control-sm edit-remrk" style="width:100%;" data-id="'+id+'" value="'+span.innerText+'">';
+            '<input type="text" class="form-control form-control-sm edit-remrk" data-id="'+id+'" value="'+span.innerText+'">';
 
         });
 
-        let saveBtn = document.getElementById("saveBtn");
 
+        // 버튼 변경
         btn.classList.add("d-none");
+        addBtn.classList.add("d-none");
         saveBtn.classList.remove("d-none");
+        cancelBtn.classList.remove("d-none");
+
 
     }else{
 
@@ -799,32 +888,100 @@ function toggleAccountEdit(){
 
 }
 
-
 let categoryData = [
-<%
-for(catGroupDto group : categoryGroup){
-%>
-{
-    catType:"<%=group.getCatType()%>",
-    catNm:"<%=group.getCatNm()%>",
-    subList:[
-    <%
-    for(catDto cat : group.getSubList()){
-    %>
-        "<%=cat.getSubCatNm()%>",
-    <%
-    }
-    %>
-    ]
-},
-<%
+	<%
+	for(catGroupDto group : categoryGroup){
+	%>
+	{
+	    catType:"<%=group.getCatType()%>",
+	    catId:"<%=group.getCatId()%>",
+	    catNm:"<%=group.getCatNm()%>",
+	    subList:[
+	    <%
+	    for(catDto cat : group.getSubList()){
+	    %>
+	        "<%=cat.getSubCatNm()%>",
+	    <%
+	    }
+	    %>
+	    ]
+	},
+	<%
+	}
+	%>
+	];
+	
+//자산/부채 추가
+function openAccountModal(){
+
+    changeAccountCatType(
+        document.getElementById("accountCatType")
+    );
+
+    let modal = new bootstrap.Modal(
+        document.getElementById("addAccountModal")
+    );
+
+    modal.show();
+
 }
-%>
-];
 
 
-console.log(categoryData);
+function changeAccountCatType(select){
 
+    let catType = select.value;
+
+    let target = document.getElementById("accountCatNm");
+
+    let html="";
+
+
+    categoryData.filter(function(item){
+
+        return item.catType == catType;
+
+    }).forEach(function(item){
+
+    	html += '<option value="'+item.catNm+'" data-id="'+item.catId+'">'+item.catNm+'</option>';
+
+    });
+
+
+    target.innerHTML = html;
+
+    changeAccountCatNm(target);
+
+}
+
+
+
+function changeAccountCatNm(select){
+
+	 let option = select.options[select.selectedIndex];
+    document.getElementById("accountCatId").value = option.dataset.id;
+    let catNm = select.value;
+    let target = document.getElementById("accountSubCatNm");
+    let html="";
+
+
+    categoryData.filter(function(item){
+
+        return item.catNm == catNm;
+
+    }).forEach(function(item){
+
+        item.subList.forEach(function(sub){
+
+            html += '<option value="'+sub+'">'+sub+'</option>';
+
+        });
+
+    });
+
+
+    target.innerHTML = html;
+
+}
 
 // 구분 변경 → 대분류 변경
 function changeCatType(select){
@@ -889,6 +1046,26 @@ function changeCatNm(select){
     html += '</select>';
 
     target.innerHTML = html;
+
+}
+
+//자산/부채 삭제
+function deleteAccountRow(btn){
+
+    if(!confirm("해당 자산/부채를 삭제하시겠습니까?")){
+        return;
+    }
+
+    let id = btn.dataset.id;
+
+    let input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "deleteAccountList";
+    input.value = id;
+
+    document.getElementById("accountDeleteArea").appendChild(input);
+
+    btn.closest("tr").remove();
 
 }
 </script>

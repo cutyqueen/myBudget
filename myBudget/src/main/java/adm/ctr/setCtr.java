@@ -178,7 +178,6 @@ public class setCtr extends HttpServlet {
                 }
            //자산/부채 저장
             }else if("updateAccount".equals(action)){
-
                 String[] accountIdList = request.getParameterValues("accountIdList");
                 String[] titleList = request.getParameterValues("titleList");
                 String[] amountList = request.getParameterValues("amountList");
@@ -187,22 +186,62 @@ public class setCtr extends HttpServlet {
                 String[] catTypeList = request.getParameterValues("catTypeList");
                 String[] catNmList = request.getParameterValues("catNmList");
                 String[] subCatNmList = request.getParameterValues("subCatNmList");
+                String[] deleteAccountList = request.getParameterValues("deleteAccountList");
+                accSvc accSvc = new accSvc();
+                int result = 0;
+                // 삭제 처리
+                if(deleteAccountList != null && deleteAccountList.length > 0){
+                    accSvc.deleteAccount(
+                        userId,
+                        deleteAccountList
+                    );
+                }
+                // 수정 처리
+                if(accountIdList != null && accountIdList.length > 0){
+                    result = accSvc.updateAccount(
+                        userId,
+                        accountIdList,
+                        catTypeList,
+                        catNmList,
+                        subCatNmList,
+                        titleList,
+                        amountList,
+                        remrkList,
+                        useYnList
+                    );
+                }
+                if(result > 0){
+                    session.setAttribute("msg", "자산 정보가 수정되었습니다.");
+                }else if(deleteAccountList != null && deleteAccountList.length > 0){
+                    session.setAttribute("msg", "자산 정보가 삭제되었습니다.");
+                }else{
+                    session.setAttribute("msg", "변경된 내용이 없습니다.");
+                }
+            //자산/부채 추가
+            }else if("insertAccount".equals(action)){
+
+                String catType = request.getParameter("catType");
+                String catId = request.getParameter("catId");
+                String catNm = request.getParameter("catNm");
+                String subCatNm = request.getParameter("subCatNm");
+                String title = request.getParameter("title");
+                String startAmount = request.getParameter("startAmount");
+                String remrk = request.getParameter("remrk");
+                String useYn = request.getParameter("useYn");
 
                 accSvc accSvc = new accSvc();
 
-                int result =accSvc.updateAccount(
-                	    userId,
-                	    accountIdList,
-                	    catTypeList,
-                	    catNmList,
-                	    subCatNmList,
-                	    titleList,
-                	    amountList,
-                	    remrkList,
-                	    useYnList
-                	);
-                session.setAttribute("msg", result > 0 ? "자산 정보가 수정되었습니다." : "수정 실패");
-                
+                int result = accSvc.insertAccount(
+                    userId,
+                    catType,
+                    catId,
+                    catNm,
+                    subCatNm,
+                    title,
+                    startAmount,
+                    remrk,
+                    useYn
+                );                            
            //회계기간 저장
             }else{
                 String setYear  = request.getParameter("acctYear");

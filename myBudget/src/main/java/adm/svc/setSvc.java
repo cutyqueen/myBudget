@@ -188,6 +188,7 @@ public List<catGroupDto> groupCategory(List<catDto> list){
             group = new catGroupDto();
             group.setCatType(cat.getCatType());
             group.setCatNm(cat.getCatNm());
+            group.setCatId(cat.getCatId()); 
             group.setSubList(new ArrayList<>());
             groupList.add(group);
         }
