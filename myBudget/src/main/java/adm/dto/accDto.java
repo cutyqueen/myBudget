@@ -2,49 +2,57 @@ package adm.dto;
 
 public class accDto {
 
-    private String acctId;
-    private String acctNm;
-    private String catCd;
-    private int balance;
+    private int accountId;
+    private String userId;
+    private int sortNo;
+    private int catId;
+    private String catType;
+    private String catNm;
+    private String subCatNm;
+    private String title;
+    private long startAmount;
+    private String remrk;
     private String useYn;
+    private String createDt;
+    private String modifyDt;
 
-    public String getAcctId() {
-        return acctId;
-    }
+    public int getAccountId(){ return accountId; }
+    public void setAccountId(int accountId){ this.accountId = accountId; }
 
-    public void setAcctId(String acctId) {
-        this.acctId = acctId;
-    }
+    public String getUserId(){ return userId; }
+    public void setUserId(String userId){ this.userId = userId; }
 
-    public String getAcctNm() {
-        return acctNm;
-    }
+    public int getSortNo(){ return sortNo; }
+    public void setSortNo(int sortNo){ this.sortNo = sortNo; }
 
-    public void setAcctNm(String acctNm) {
-        this.acctNm = acctNm;
-    }
+    public int getCatId(){ return catId; }
+    public void setCatId(int catId){ this.catId = catId; }
 
-    public String getCatCd() {
-        return catCd;
-    }
+    public String getCatType(){ return catType; }
+    public void setCatType(String catType){ this.catType = catType; }
 
-    public void setCatCd(String catCd) {
-        this.catCd = catCd;
-    }
+    public String getCatNm(){ return catNm; }
+    public void setCatNm(String catNm){ this.catNm = catNm; }
 
-    public int getBalance() {
-        return balance;
-    }
+    public String getSubCatNm(){ return subCatNm; }
+    public void setSubCatNm(String subCatNm){ this.subCatNm = subCatNm; }
 
-    public void setBalance(int balance) {
-        this.balance = balance;
-    }
+    public String getTitle(){ return title; }
+    public void setTitle(String title){ this.title = title; }
 
-    public String getUseYn() {
-        return useYn;
-    }
+    public long getStartAmount(){ return startAmount; }
+    public void setStartAmount(long startAmount){ this.startAmount = startAmount; }
 
-    public void setUseYn(String useYn) {
-        this.useYn = useYn;
-    }
+    public String getRemrk(){ return remrk; }
+    public void setRemrk(String remrk){ this.remrk = remrk; }
+
+    public String getUseYn(){ return useYn; }
+    public void setUseYn(String useYn){ this.useYn = useYn; }
+
+    public String getCreateDt(){ return createDt; }
+    public void setCreateDt(String createDt){ this.createDt = createDt; }
+
+    public String getModifyDt(){ return modifyDt; }
+    public void setModifyDt(String modifyDt){ this.modifyDt = modifyDt; }
+
 }

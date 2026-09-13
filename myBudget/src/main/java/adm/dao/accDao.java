@@ -1,8 +1,6 @@
 package adm.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,47 +9,104 @@ import adm.dto.accDto;
 
 public class accDao {
 
-    public List<accDto> selectAccountList() {
-        List<accDto> accountList =
-                new ArrayList<accDto>();
+    public List<accDto> findAccountList(String userId){
+    	System.out.println("accDao.findAccountList 실행");
+        System.out.println("userId = " + userId);
+        List<accDto> list = new ArrayList<>();
+        String sql =
+        		"/* accDao.findAccountList */\n" +
+        		"SELECT ACCOUNT_ID,\n" +
+        		"       USER_ID,\n" +
+        		"       SORT_NO,\n" +
+        		"       CAT_ID,\n" +
+        		"       CAT_TYPE,\n" +
+        		"       CAT_NM,\n" +
+        		"       SUB_CAT_NM,\n" +
+        		"       TITLE,\n" +
+        		"       START_AMOUNT,\n" +
+        		"       REMRK,\n" +
+        		"       USE_YN,\n" +
+        		"       CREATE_DT,\n" +
+        		"       MODIFY_DT\n" +
+        		"FROM ACCOUNT\n" +
+        		"WHERE USER_ID=?\n" +
+        		"ORDER BY SORT_NO";
 
-        StringBuilder sql = new StringBuilder();
+        try(Connection conn = DBConn.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)){
+        	DBConn.logSql(sql,userId);
+            pstmt.setString(1,userId);
 
-        sql.append(" SELECT ");
-        sql.append("     ACCT_ID, ");
-        sql.append("     ACCT_NM, ");
-        sql.append("     CAT_CD, ");
-        sql.append("     BALANCE, ");
-        sql.append("     USE_YN ");
-        sql.append(" FROM ACCOUNTS ");
-        sql.append(" WHERE USE_YN = '1' ");
-        sql.append(" ORDER BY ACCT_NM ");
+            ResultSet rs = pstmt.executeQuery();
 
-        try (
-            Connection conn = DBConn.getConnection();
-            PreparedStatement pstmt =
-                    conn.prepareStatement(sql.toString())
-        ) {
-            try (
-                ResultSet rs = pstmt.executeQuery()
-            ) {
-                while (rs.next()) {
-                    accDto account = new accDto();
+            while(rs.next()){
 
-                    account.setAcctId(rs.getString("ACCT_ID"));
-                    account.setAcctNm(rs.getString("ACCT_NM"));
-                    account.setCatCd(rs.getString("CAT_CD"));
-                    account.setBalance(rs.getInt("BALANCE"));
-                    account.setUseYn(rs.getString("USE_YN"));
+                accDto dto = new accDto();
 
-                    accountList.add(account);
-                }
+                dto.setAccountId(rs.getInt("ACCOUNT_ID"));
+                dto.setUserId(rs.getString("USER_ID"));
+                dto.setSortNo(rs.getInt("SORT_NO"));
+                dto.setCatId(rs.getInt("CAT_ID"));
+                dto.setCatType(rs.getString("CAT_TYPE"));
+                dto.setCatNm(rs.getString("CAT_NM"));
+                dto.setSubCatNm(rs.getString("SUB_CAT_NM"));
+                dto.setTitle(rs.getString("TITLE"));
+                dto.setStartAmount(rs.getLong("START_AMOUNT"));
+                dto.setRemrk(rs.getString("REMRK"));
+                dto.setUseYn(rs.getString("USE_YN"));
+                dto.setCreateDt(rs.getString("CREATE_DT"));
+                dto.setModifyDt(rs.getString("MODIFY_DT"));
+
+                list.add(dto);
             }
 
-        } catch (Exception e) {
+        }catch(Exception e){
             e.printStackTrace();
         }
 
-        return accountList;
+        return list;
     }
+//자산/부채 저장
+public int updateAccount(String userId, String[] accountIdList, String[] catTypeList, String[] catNmList, String[] subCatNmList, String[] titleList, String[] amountList, String[] remrkList, String[] useYnList) {
+
+    int result = 0;
+
+    String sql =
+    	    "/* accDao.updateAccount */\n" +
+    	    "UPDATE ACCOUNT\n" +
+    	    "SET CAT_TYPE=?,\n" +
+    	    "CAT_NM=?,\n" +
+    	    "SUB_CAT_NM=?,\n" +
+    	    "TITLE=?,\n" +
+    	    "START_AMOUNT=?,\n" +
+    	    "REMRK=?,\n" +
+    	    "USE_YN=?,\n" +
+    	    "MODIFY_DT=SYSDATE\n" +
+    	    "WHERE ACCOUNT_ID=?\n" +
+    	    "AND USER_ID=?";
+
+    try(Connection conn = DBConn.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql)){
+
+        for(int i=0; i<accountIdList.length; i++){
+
+        	pstmt.setString(1,catTypeList[i]);
+        	pstmt.setString(2,catNmList[i]);
+        	pstmt.setString(3,subCatNmList[i]);
+        	pstmt.setString(4,titleList[i]);
+        	pstmt.setLong(5,Long.parseLong(amountList[i]));
+        	pstmt.setString(6,remrkList[i]);
+        	pstmt.setString(7,useYnList[i]);
+        	pstmt.setInt(8,Integer.parseInt(accountIdList[i]));
+        	pstmt.setString(9,userId);
+
+            result += pstmt.executeUpdate();
+        }
+
+    }catch(Exception e){
+        e.printStackTrace();
+    }
+
+    return result;
+}
 }

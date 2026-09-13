@@ -16,6 +16,7 @@ import adm.dto.catDto;
 import adm.dto.catGroupDto;
 import adm.dto.noticeDto;
 import adm.dto.userDto;
+import adm.svc.accSvc;
 import adm.svc.noticeSvc;
 import adm.svc.setSvc;
 import java.util.List;
@@ -68,6 +69,10 @@ public class setCtr extends HttpServlet {
 
         request.setAttribute("categoryList", categoryList);
         request.setAttribute("categoryGroup", categoryGroup);
+        
+        //가계부설정-자산/부채 조회
+        accSvc accSvc = new accSvc();
+        request.setAttribute("accountList", accSvc.findAccountList(userId));
         
         RequestDispatcher dispatcher =
                 request.getRequestDispatcher(
@@ -171,6 +176,33 @@ public class setCtr extends HttpServlet {
                 }else{
                     session.setAttribute("msg","삭제 실패");
                 }
+           //자산/부채 저장
+            }else if("updateAccount".equals(action)){
+
+                String[] accountIdList = request.getParameterValues("accountIdList");
+                String[] titleList = request.getParameterValues("titleList");
+                String[] amountList = request.getParameterValues("amountList");
+                String[] remrkList = request.getParameterValues("remrkList");
+                String[] useYnList = request.getParameterValues("useYnList");
+                String[] catTypeList = request.getParameterValues("catTypeList");
+                String[] catNmList = request.getParameterValues("catNmList");
+                String[] subCatNmList = request.getParameterValues("subCatNmList");
+
+                accSvc accSvc = new accSvc();
+
+                int result =accSvc.updateAccount(
+                	    userId,
+                	    accountIdList,
+                	    catTypeList,
+                	    catNmList,
+                	    subCatNmList,
+                	    titleList,
+                	    amountList,
+                	    remrkList,
+                	    useYnList
+                	);
+                session.setAttribute("msg", result > 0 ? "자산 정보가 수정되었습니다." : "수정 실패");
+                
            //회계기간 저장
             }else{
                 String setYear  = request.getParameter("acctYear");
